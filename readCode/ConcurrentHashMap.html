@@ -17,15 +17,11 @@
     
             
                 
-                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search-plus/search.css">
-                
-            
-                
-                <link rel="stylesheet" href="../gitbook/gitbook-plugin-expandable-chapters/expandable-chapters.css">
-                
-            
-                
                 <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
                 
             
                 
@@ -236,19 +232,13 @@
                     <div class="page-wrapper" tabindex="-1" role="main">
                         <div class="page-inner">
                             
-<div class="search-plus" id="book-search-results">
+<div id="book-search-results">
     <div class="search-noresults">
     
                                 <section class="normal markdown-section">
                                 
                                 <h1 id="concurrenthashmap">ConcurrentHashMap</h1>
 <!-- toc -->
-<ul>
-<li><a href="#1%E7%BB%A7%E6%89%BF%E5%85%B3%E7%B3%BB">1.&#x7EE7;&#x627F;&#x5173;&#x7CFB;</a></li>
-<li><a href="#2put">2.put</a></li>
-<li><a href="#3get">3.get</a></li>
-</ul>
-<!-- tocstop -->
 <h2 id="1&#x7EE7;&#x627F;&#x5173;&#x7CFB;">1.&#x7EE7;&#x627F;&#x5173;&#x7CFB;</h2>
 <p>&#x8DDF; <code>map</code> &#x4E00;&#x6837;&#xFF0C;&#x7EE7;&#x627F;&#x81EA; <code>AbstractMap</code> ,&#x4F46;&#x662F;&#x5B9E;&#x73B0;&#x7684; <code>ConcurrentMap</code> &#x63A5;&#x53E3;&#xFF0C;<code>ConcurrentMap</code>&#x4E0E;<code>Map</code>&#x63A5;&#x53E3;&#x533A;&#x522B;&#x4E3B;&#x8981;&#x5728;&#x4E8E;&#x662F;&#x5426;&#x5141;&#x8BB8;<code>null</code>&#x503C;&#xFF0C;&#x4EE5;&#x53CA;&#x5BF9;&#x4E8E;&#x5E76;&#x53D1;&#x7684;&#x64CD;&#x4F5C;&#x662F;&#x5426;&#x629B;&#x51FA; <code>ConcurrentModificationException</code> &#x5F02;&#x5E38;&#xFF0C;&#x4EE5;&#x53CA;&#x4FDD;&#x969C;&#x4E00;&#x4E9B;&#x64CD;&#x4F5C;&#xFF08;compute&#xFF0C;merge&#xFF09;&#x7684;&#x539F;&#x5B50;&#x6027;</p>
 <pre><code class="lang-java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ConcurrentHashMap</span>&lt;<span class="hljs-title">K</span>,<span class="hljs-title">V</span>&gt; <span class="hljs-keyword">extends</span> <span class="hljs-title">AbstractMap</span>&lt;<span class="hljs-title">K</span>,<span class="hljs-title">V</span>&gt;
@@ -374,7 +364,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"ConcurrentHashMap","level":"1.3.2","depth":2,"next":{"title":"数据结构及算法","level":"1.4","depth":1,"path":"DataStructure/README.md","ref":"DataStructure/README.md","articles":[{"title":"红黑树","level":"1.4.1","depth":2,"path":"DataStructure/RedBlackTree.md","ref":"DataStructure/RedBlackTree.md","articles":[]}]},"previous":{"title":"HashMap","level":"1.3.1","depth":2,"path":"readCode/HashMap.md","ref":"readCode/HashMap.md","articles":[]},"dir":"ltr"},"config":{"plugins":["-lunr","-search","search-plus","simple-page-toc","expandable-chapters","livereload"],"root":"docs","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"simple-page-toc":{"maxDepth":3,"skipFirstH1":true},"search-plus":{},"expandable-chapters":{},"livereload":{},"highlight":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"gitbook":"*"},"file":{"path":"readCode/ConcurrentHashMap.md","mtime":"2021-05-08T12:03:29.276Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2021-05-08T13:38:13.397Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"ConcurrentHashMap","level":"1.3.2","depth":2,"next":{"title":"数据结构及算法","level":"1.4","depth":1,"path":"DataStructure/README.md","ref":"DataStructure/README.md","articles":[{"title":"红黑树","level":"1.4.1","depth":2,"path":"DataStructure/RedBlackTree.md","ref":"DataStructure/RedBlackTree.md","articles":[]}]},"previous":{"title":"HashMap","level":"1.3.1","depth":2,"path":"readCode/HashMap.md","ref":"readCode/HashMap.md","articles":[]},"dir":"ltr"},"config":{"plugins":["livereload"],"root":"docs","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"gitbook":"*"},"file":{"path":"readCode/ConcurrentHashMap.md","mtime":"2021-05-08T12:03:29.276Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2021-05-08T15:17:34.089Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>
@@ -384,19 +374,23 @@
     <script src="../gitbook/theme.js"></script>
     
         
-        <script src="../gitbook/gitbook-plugin-search-plus/jquery.mark.min.js"></script>
-        
-    
-        
-        <script src="../gitbook/gitbook-plugin-search-plus/search.js"></script>
-        
-    
-        
-        <script src="../gitbook/gitbook-plugin-expandable-chapters/expandable-chapters.js"></script>
-        
-    
-        
         <script src="../gitbook/gitbook-plugin-livereload/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
         
     
         
