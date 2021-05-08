@@ -2,7 +2,8 @@
   "root": "docs",
   "plugins" : [
     "-lunr", "-search", "search-plus",
-    "simple-page-toc"
+    "simple-page-toc",
+    "expandable-chapters"
   ],
   "pluginsConfig": {
     "simple-page-toc": {
