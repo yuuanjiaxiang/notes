@@ -1,0 +1,407 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>ConcurrentHashMap · GitBook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="../DataStructure/" />
+    
+    
+    <link rel="prev" href="HashMap.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="../gitbook/gitbook.html">
+            
+                <a href="../gitbook/gitbook.html">
+            
+                    
+                    gitbook
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="readCode.html">
+            
+                <a href="readCode.html">
+            
+                    
+                    源码阅读
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="HashMap.html">
+            
+                <a href="HashMap.html">
+            
+                    
+                    HashMap
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.3.2" data-path="ConcurrentHashMap.html">
+            
+                <a href="ConcurrentHashMap.html">
+            
+                    
+                    ConcurrentHashMap
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="../DataStructure/">
+            
+                <a href="../DataStructure/">
+            
+                    
+                    数据结构及算法
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1" data-path="../DataStructure/RedBlackTree.html">
+            
+                <a href="../DataStructure/RedBlackTree.html">
+            
+                    
+                    红黑树
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >ConcurrentHashMap</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="concurrenthashmap">ConcurrentHashMap</h1>
+<!-- toc -->
+<h2 id="1&#x7EE7;&#x627F;&#x5173;&#x7CFB;">1.&#x7EE7;&#x627F;&#x5173;&#x7CFB;</h2>
+<p>&#x8DDF; <code>map</code> &#x4E00;&#x6837;&#xFF0C;&#x7EE7;&#x627F;&#x81EA; <code>AbstractMap</code> ,&#x4F46;&#x662F;&#x5B9E;&#x73B0;&#x7684; <code>ConcurrentMap</code> &#x63A5;&#x53E3;&#xFF0C;<code>ConcurrentMap</code>&#x4E0E;<code>Map</code>&#x63A5;&#x53E3;&#x533A;&#x522B;&#x4E3B;&#x8981;&#x5728;&#x4E8E;&#x662F;&#x5426;&#x5141;&#x8BB8;<code>null</code>&#x503C;&#xFF0C;&#x4EE5;&#x53CA;&#x5BF9;&#x4E8E;&#x5E76;&#x53D1;&#x7684;&#x64CD;&#x4F5C;&#x662F;&#x5426;&#x629B;&#x51FA; <code>ConcurrentModificationException</code> &#x5F02;&#x5E38;&#xFF0C;&#x4EE5;&#x53CA;&#x4FDD;&#x969C;&#x4E00;&#x4E9B;&#x64CD;&#x4F5C;&#xFF08;compute&#xFF0C;merge&#xFF09;&#x7684;&#x539F;&#x5B50;&#x6027;</p>
+<pre><code class="lang-java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ConcurrentHashMap</span>&lt;<span class="hljs-title">K</span>,<span class="hljs-title">V</span>&gt; <span class="hljs-keyword">extends</span> <span class="hljs-title">AbstractMap</span>&lt;<span class="hljs-title">K</span>,<span class="hljs-title">V</span>&gt;
+    <span class="hljs-keyword">implements</span> <span class="hljs-title">ConcurrentMap</span>&lt;<span class="hljs-title">K</span>,<span class="hljs-title">V</span>&gt;, <span class="hljs-title">Serializable</span></span>{}
+</code></pre>
+<h2 id="2put">2.put</h2>
+<pre><code class="lang-java"><span class="hljs-comment">/** Implementation for put and putIfAbsent */</span>
+<span class="hljs-function"><span class="hljs-keyword">final</span> V <span class="hljs-title">putVal</span><span class="hljs-params">(K key, V value, <span class="hljs-keyword">boolean</span> onlyIfAbsent)</span> </span>{
+    <span class="hljs-comment">// key&#x8DDF;value&#x90FD;&#x4E0D;&#x5141;&#x8BB8;&#x7A7A;&#x503C;</span>
+    <span class="hljs-keyword">if</span> (key == <span class="hljs-keyword">null</span> || value == <span class="hljs-keyword">null</span>) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> NullPointerException();
+    <span class="hljs-comment">// &#x8BA1;&#x7B97;Hash&#x503C;</span>
+    <span class="hljs-keyword">int</span> hash = spread(key.hashCode());
+    <span class="hljs-comment">// &#x8BB0;&#x5F55;&#x94FE;&#x8868;&#x957F;&#x5EA6;</span>
+    <span class="hljs-keyword">int</span> binCount = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (Node&lt;K,V&gt;[] tab = table;;) {
+        Node&lt;K,V&gt; f; <span class="hljs-keyword">int</span> n, i, fh;
+        <span class="hljs-comment">// &#x5982;&#x679C;&#x6570;&#x7EC4;&#x957F;&#x5EA6;&#x4E3A;&#x7A7A;&#xFF0C;&#x8FDB;&#x884C;&#x521D;&#x59CB;&#x5316;</span>
+        <span class="hljs-keyword">if</span> (tab == <span class="hljs-keyword">null</span> || (n = tab.length) == <span class="hljs-number">0</span>)
+            tab = initTable();
+        <span class="hljs-comment">// &#x83B7;&#x53D6;&#x94FE;&#x8868;&#x7684;&#x7B2C;&#x4E00;&#x4E2A;&#x5143;&#x7D20;&#xFF0C;&#x4E3A;&#x7A7A;&#x5219;&#x65B0;&#x5EFA;</span>
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> ((f = tabAt(tab, i = (n - <span class="hljs-number">1</span>) &amp; hash)) == <span class="hljs-keyword">null</span>) {
+            <span class="hljs-keyword">if</span> (casTabAt(tab, i, <span class="hljs-keyword">null</span>,
+                         <span class="hljs-keyword">new</span> Node&lt;K,V&gt;(hash, key, value, <span class="hljs-keyword">null</span>)))
+                <span class="hljs-keyword">break</span>;                   <span class="hljs-comment">// no lock when adding to empty bin</span>
+        }
+        <span class="hljs-comment">// &#x5982;&#x679C;f&#x7684;Hash&#x7B49;&#x4E8E;MOVED&#x5219;&#x6269;&#x5BB9;</span>
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> ((fh = f.hash) == MOVED)
+            tab = helpTransfer(tab, f);
+        <span class="hljs-comment">// &#x5982;&#x679C;&#x5934;&#x7ED3;&#x70B9;&#x4E0D;&#x4E3A;&#x7A7A;&#xFF0C;&#x52A0;&#x9501;</span>
+        <span class="hljs-keyword">else</span> {
+            V oldVal = <span class="hljs-keyword">null</span>;
+            <span class="hljs-keyword">synchronized</span> (f) {
+                <span class="hljs-keyword">if</span> (tabAt(tab, i) == f) {
+                    <span class="hljs-comment">// &#x5934;&#x7ED3;&#x70B9;hash&gt;0&#x4E3A;&#x94FE;&#x8868;</span>
+                    <span class="hljs-keyword">if</span> (fh &gt;= <span class="hljs-number">0</span>) {
+                        binCount = <span class="hljs-number">1</span>;
+                        <span class="hljs-keyword">for</span> (Node&lt;K,V&gt; e = f;; ++binCount) {
+                            K ek;
+                            <span class="hljs-keyword">if</span> (e.hash == hash &amp;&amp;
+                                ((ek = e.key) == key ||
+                                 (ek != <span class="hljs-keyword">null</span> &amp;&amp; key.equals(ek)))) {
+                                oldVal = e.val;
+                                <span class="hljs-keyword">if</span> (!onlyIfAbsent)
+                                    e.val = value;
+                                <span class="hljs-keyword">break</span>;
+                            }
+                            Node&lt;K,V&gt; pred = e;
+                            <span class="hljs-keyword">if</span> ((e = e.next) == <span class="hljs-keyword">null</span>) {
+                                pred.next = <span class="hljs-keyword">new</span> Node&lt;K,V&gt;(hash, key,
+                                                          value, <span class="hljs-keyword">null</span>);
+                                <span class="hljs-keyword">break</span>;
+                            }
+                        }
+                    }
+                    <span class="hljs-comment">// &#x8981;&#x662F;&#x4E3A;Treebin&#xFF0C;&#x90A3;&#x5C31;&#x662F;&#x7EA2;&#x9ED1;&#x6811;</span>
+                    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (f <span class="hljs-keyword">instanceof</span> TreeBin) {
+                        Node&lt;K,V&gt; p;
+                        binCount = <span class="hljs-number">2</span>;
+                        <span class="hljs-keyword">if</span> ((p = ((TreeBin&lt;K,V&gt;)f).putTreeVal(hash, key,
+                                                       value)) != <span class="hljs-keyword">null</span>) {
+                            oldVal = p.val;
+                            <span class="hljs-keyword">if</span> (!onlyIfAbsent)
+                                p.val = value;
+                        }
+                    }
+                }
+            }
+            <span class="hljs-keyword">if</span> (binCount != <span class="hljs-number">0</span>) {
+                <span class="hljs-comment">// &#x94FE;&#x8868;&#x957F;&#x5EA6;&#x5927;&#x4E8E;&#x9608;&#x503C;&#xFF0C;&#x8F6C;&#x5316;&#x4E3A;&#x6811;</span>
+                <span class="hljs-keyword">if</span> (binCount &gt;= TREEIFY_THRESHOLD)
+                    treeifyBin(tab, i);
+                <span class="hljs-keyword">if</span> (oldVal != <span class="hljs-keyword">null</span>)
+                    <span class="hljs-keyword">return</span> oldVal;
+                <span class="hljs-keyword">break</span>;
+            }
+        }
+    }
+    addCount(<span class="hljs-number">1L</span>, binCount);
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;
+}
+</code></pre>
+<h2 id="3get">3.get</h2>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="HashMap.html" class="navigation navigation-prev " aria-label="Previous page: HashMap">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="../DataStructure/" class="navigation navigation-next " aria-label="Next page: 数据结构及算法">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"ConcurrentHashMap","level":"1.3.2","depth":2,"next":{"title":"数据结构及算法","level":"1.4","depth":1,"path":"DataStructure/README.md","ref":"DataStructure/README.md","articles":[{"title":"红黑树","level":"1.4.1","depth":2,"path":"DataStructure/RedBlackTree.md","ref":"DataStructure/RedBlackTree.md","articles":[]}]},"previous":{"title":"HashMap","level":"1.3.1","depth":2,"path":"readCode/HashMap.md","ref":"readCode/HashMap.md","articles":[]},"dir":"ltr"},"config":{"plugins":["livereload"],"root":"docs","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"gitbook":"*"},"file":{"path":"readCode/ConcurrentHashMap.md","mtime":"2021-05-08T12:03:29.276Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2021-05-08T13:04:51.234Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-livereload/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+
