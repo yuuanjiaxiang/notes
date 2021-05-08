@@ -17,11 +17,11 @@
     
             
                 
-                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search-plus/search.css">
                 
             
                 
-                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
                 
             
                 
@@ -232,13 +232,28 @@
                     <div class="page-wrapper" tabindex="-1" role="main">
                         <div class="page-inner">
                             
-<div id="book-search-results">
+<div class="search-plus" id="book-search-results">
     <div class="search-noresults">
     
                                 <section class="normal markdown-section">
                                 
                                 <h1 id="concurrenthashmap">ConcurrentHashMap</h1>
 <!-- toc -->
+<ul>
+<li><a href="#1%E7%BB%A7%E6%89%BF%E5%85%B3%E7%B3%BB">1.&#x7EE7;&#x627F;&#x5173;&#x7CFB;</a></li>
+<li><a href="#2%E5%87%A0%E4%B8%AA%E5%8F%98%E9%87%8F">2.&#x51E0;&#x4E2A;&#x53D8;&#x91CF;</a></li>
+<li><a href="#3put">3.put</a><ul>
+<li><a href="#31treeifybin">3.1.treeifyBin()</a></li>
+<li><a href="#32treenodetreeify">3.2.TreeNode.treeify</a></li>
+<li><a href="#33treenodeputtreeval">3.3.TreeNode.putTreeVal(</a></li>
+</ul>
+</li>
+<li><a href="#4get">4.get</a><ul>
+<li><a href="#41treenodegettreenode">4.1.TreeNode.getTreeNode</a></li>
+</ul>
+</li>
+</ul>
+<!-- tocstop -->
 <h2 id="1&#x7EE7;&#x627F;&#x5173;&#x7CFB;">1.&#x7EE7;&#x627F;&#x5173;&#x7CFB;</h2>
 <p>&#x7EE7;&#x627F;&#x81EA; <code>AbstractMap</code> ,&#x5B9E;&#x73B0;&#x4E86; <code>Map</code> &#x63A5;&#x53E3;,&#x4F46;&#x662F;&#x5176;&#x5B9E;&#x6709;&#x70B9;&#x5947;&#x602A;&#x7684;&#x662F;&#xFF0C;&#x660E;&#x660E;&#x5B83;&#x4EEC;&#x7684;&#x65B9;&#x6CD5;&#x90FD;&#x662F;&#x4E00;&#x6837;&#x7684;&#xFF0C;<a href="https://stackoverflow.com/questions/2165204/why-does-linkedhashsete-extend-hashsete-and-implement-sete" target="_blank">&#x5728;stackoverflow&#x627E;&#x5230;&#x4E86;&#x7B54;&#x6848;&#xFF08;&#x70B9;&#x51FB;&#x8FD9;&#x91CC;&#x8DF3;&#x8F6C;&#xFF09;</a></p>
 <pre><code class="lang-java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">HashMap</span>&lt;<span class="hljs-title">K</span>,<span class="hljs-title">V</span>&gt; <span class="hljs-keyword">extends</span> <span class="hljs-title">AbstractMap</span>&lt;<span class="hljs-title">K</span>,<span class="hljs-title">V</span>&gt;
@@ -493,7 +508,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"HashMap","level":"1.3.1","depth":2,"next":{"title":"ConcurrentHashMap","level":"1.3.2","depth":2,"path":"readCode/ConcurrentHashMap.md","ref":"readCode/ConcurrentHashMap.md","articles":[]},"previous":{"title":"源码阅读","level":"1.3","depth":1,"path":"readCode/readCode.md","ref":"readCode/readCode.md","articles":[{"title":"HashMap","level":"1.3.1","depth":2,"path":"readCode/HashMap.md","ref":"readCode/HashMap.md","articles":[]},{"title":"ConcurrentHashMap","level":"1.3.2","depth":2,"path":"readCode/ConcurrentHashMap.md","ref":"readCode/ConcurrentHashMap.md","articles":[]}]},"dir":"ltr"},"config":{"plugins":["livereload"],"root":"docs","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"gitbook":"*"},"file":{"path":"readCode/HashMap.md","mtime":"2021-05-08T12:03:04.862Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2021-05-08T13:04:51.234Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"HashMap","level":"1.3.1","depth":2,"next":{"title":"ConcurrentHashMap","level":"1.3.2","depth":2,"path":"readCode/ConcurrentHashMap.md","ref":"readCode/ConcurrentHashMap.md","articles":[]},"previous":{"title":"源码阅读","level":"1.3","depth":1,"path":"readCode/readCode.md","ref":"readCode/readCode.md","articles":[{"title":"HashMap","level":"1.3.1","depth":2,"path":"readCode/HashMap.md","ref":"readCode/HashMap.md","articles":[]},{"title":"ConcurrentHashMap","level":"1.3.2","depth":2,"path":"readCode/ConcurrentHashMap.md","ref":"readCode/ConcurrentHashMap.md","articles":[]}]},"dir":"ltr"},"config":{"plugins":["-lunr","-search","search-plus","simple-page-toc","livereload"],"root":"docs","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"simple-page-toc":{"maxDepth":3,"skipFirstH1":true},"search-plus":{},"livereload":{},"highlight":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"gitbook":"*"},"file":{"path":"readCode/HashMap.md","mtime":"2021-05-08T12:03:04.862Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2021-05-08T13:15:18.841Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>
@@ -503,23 +518,15 @@
     <script src="../gitbook/theme.js"></script>
     
         
+        <script src="../gitbook/gitbook-plugin-search-plus/jquery.mark.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search-plus/search.js"></script>
+        
+    
+        
         <script src="../gitbook/gitbook-plugin-livereload/plugin.js"></script>
-        
-    
-        
-        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
-        
-    
-        
-        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
-        
-    
-        
-        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
-        
-    
-        
-        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
         
     
         
