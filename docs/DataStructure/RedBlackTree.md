@@ -1,8 +1,8 @@
 # 红黑树
+[Toc]
+红黑树是一种特殊的二叉搜索树，按照插入或者删除元素时通过左旋或者右旋来使树始终保持平衡；
 
-[TOC]
-
-## 性质
+## 1.红黑树特征
 
 1. 每个节点不是红色就是黑色
 2. 根节点是黑色
@@ -10,7 +10,7 @@
 4. 红色节点在子节点必须是黑色
 5. 从一个节点到其子孙节点走过相同的黑色节点
 
-先来看下TreeNode 的定义：
+先来看下`TreeNode `的定义：
 
 一般的，对于二叉树的每个节点，要定义左右子节点跟value值，父节点，红黑树需要额外的记录当前节点的color
 
@@ -37,8 +37,13 @@ public class RBTree<T extends Comparable<T>> {
 }
 ```
 
-## 左旋
+## 2.左旋
 
+左旋实际就是将当前节点放在它的左子节点上
+
+![RBTreeLeftRotate](image\RBTreeLeftRotate.png)
+
+看起来很简单，下面考虑下如何用`JAVA`代码实现，主要考虑，如果有节点为空怎么办?如果X为根节点怎么办？
 
 
 ```java
@@ -72,6 +77,8 @@ private void leftRotate(RBNode<T> x) {
 ## 右旋
 
 看了左旋以后其实很容易写出右旋，因为本质上左旋右旋是互逆的过程
+
+![RBTreeLeftRotate](image\RBTreeRightRotate.png)
 
 ```java
 // 右旋操作
@@ -109,7 +116,7 @@ private void rightRotate(RBNode<T> x) {
 
 思考插入红色跟黑色情况下，红色只违反了性质4，通过旋转可以解决，黑色违反了性质5，多出来的一个放在哪里都会使该路径黑色节点+1,必须把它涂成红色，这样就又回到了性质4，不如直接插入时就把它涂成红色；
 
-考虑插入情况：![RBTreeInsert](E:\mycode\notes\docs\DataStructure\image\RBTreeInsert.png)
+考虑插入情况：![RBTreeInsert](image\RBTreeInsert.png)
 
 <font color=/#DC143C>**其实为了达到目的，旋转跟涂色的最终目的，就是把这个红色给放到根节点上，然后把根节点涂黑，万事大吉，所有路径都加了一个黑色节点等于没加，哈哈哈**</font>
 
@@ -169,3 +176,27 @@ private void insert(RBNode<T> node) {
 ```
 
 ### insertFixUp（）旋转涂色
+
+#### case1,case2
+
+<img src="image/RBTreeInsertcase1.png" alt="image-20210510205859403"  />
+
+对于case1,case2，其实是一样的，如图例中，32为新添加的节点，只需要将父节点跟叔节点都涂成黑的，就可以把祖父节点涂成红的，这时，然后变成case3或者case4
+
+#### case3
+
+(01) 将“父节点”作为“新的当前节点”。
+(02) 以“新的当前节点”为支点进行左旋。
+
+这样情况就变成了case4
+
+<img src="image/RBTreeInsertcase3.png" alt="image-20210510205859403"  />
+
+#### case4
+
+(01) 将“父节点”设为“黑色”。
+(02) 将“祖父节点”设为“红色”。
+(03) 以“祖父节点”为支点进行右旋。
+
+<img src="image/RBTreeInsertcase4.png" alt="image-20210510205859403"  />
+
