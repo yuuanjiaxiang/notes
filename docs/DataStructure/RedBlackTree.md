@@ -1,0 +1,171 @@
+# 红黑树
+
+[TOC]
+
+## 性质
+
+1. 每个节点不是红色就是黑色
+2. 根节点是黑色
+3. 叶子节点也是黑色（空的叶子节点）
+4. 红色节点在子节点必须是黑色
+5. 从一个节点到其子孙节点走过相同的黑色节点
+
+先来看下TreeNode 的定义：
+
+一般的，对于二叉树的每个节点，要定义左右子节点跟value值，父节点，红黑树需要额外的记录当前节点的color
+
+```java
+public class RBTree<T extends Comparable<T>> {
+    private RBNode<T> root; // 树的根节点
+
+    public class RBNode<T extends Comparable<T>> {
+        boolean red; // 红色为true,黑色false
+        T key; // 关键字(键值)
+        RBNode<T> left; // 左子节点
+        RBNode<T> right; // 右子节点
+        RBNode<T> parent; // 父节点
+
+        public RBNode(T key, boolean red, RBNode<T> parent, RBNode<T> left, RBNode<T> right) {
+            this.key = key;
+            this.red = red;
+            this.parent = parent;
+            this.left = left;
+            this.right = right;
+        }
+    }
+
+}
+```
+
+## 左旋
+
+
+
+```java
+// 左旋操作
+private void leftRotate(RBNode<T> x) {
+    RBNode<T> y = x.right;
+    // 将y左节点作为x的右节点
+    x.right = y.left;
+    if (y.left != null) {
+        y.left.parent = x;
+    }
+
+    // 用y替掉x，如果x是根节点，维护y为根节点
+    y.parent = x.parent;
+    if (x.parent == null) {
+        this.root = y;
+    } else {
+        if (x.parent.left == x) {
+            x.parent.left = y;
+        } else {
+            x.parent.right = y;
+        }
+    }
+
+    // 将 x设为y的左子节点
+    y.left = x;
+    x.parent = y;
+}
+```
+
+## 右旋
+
+看了左旋以后其实很容易写出右旋，因为本质上左旋右旋是互逆的过程
+
+```java
+// 右旋操作
+private void rightRotate(RBNode<T> x) {
+    RBNode<T> y = x.left;
+    // 将y右节点作为x的左节点
+    x.left = y.right;
+    if (y.right != null) {
+        y.right.parent = x;
+    }
+
+    // 用y替掉x
+    y.parent = x.parent;
+    if (x.parent == null) {
+        this.root = y;
+    } else {
+        if (x.parent.left == x) {
+            x.parent.left = y;
+        } else {
+            x.parent.right = y;
+        }
+    }
+    
+    // 将x设为y右子节点
+    x.parent = y;
+    y.right = x;
+}
+```
+
+## 插入
+
+进行插入操作时，先按照二叉查找树，将节点<font color=#DC143C>**插入**</font>，然后将其<font color=#DC143C>**涂为红色**</font>，最后通过<font color=#DC143C>**旋转和重新着色**</font>，使其成为一颗红黑树，详情如下：
+
+首先考虑，为什么要将插入节点涂为<font color=#DC143C>**红色**</font>？
+
+思考插入红色跟黑色情况下，红色只违反了性质4，通过旋转可以解决，黑色违反了性质5，多出来的一个放在哪里都会使该路径黑色节点+1,必须把它涂成红色，这样就又回到了性质4，不如直接插入时就把它涂成红色；
+
+考虑插入情况：![RBTreeInsert](E:\mycode\notes\docs\DataStructure\image\RBTreeInsert.png)
+
+<font color=/#DC143C>**其实为了达到目的，旋转跟涂色的最终目的，就是把这个红色给放到根节点上，然后把根节点涂黑，万事大吉，所有路径都加了一个黑色节点等于没加，哈哈哈**</font>
+
+### insert(）插入
+
+先朴素的考虑case1,case2,case3,然后case3下的四种情况，用旋转跟涂色来解决：
+
+```java
+// 新建节点，插入
+public void insert(T key) {
+    RBNode<T> node = new RBNode<T>(key, false, null, null, null);
+
+    // 如果新建结点失败，则返回。
+    if (node != null) {
+        insert(node);
+    }
+
+}
+
+// 插入
+private void insert(RBNode<T> node) {
+    int cmp;
+    RBNode<T> y = null;
+    RBNode<T> x = this.root;
+
+    // 1.先将node节点插入到红黑树中
+
+    // 找到插入的位置x
+    while (x != null) {
+        y = x;
+        cmp = node.key.compareTo(x.key);
+        if (cmp < 0) {
+            x = x.left;
+        } else {
+            x = x.right;
+        }
+    }
+
+    node.parent = y;
+    if (y != null) {
+        cmp = node.key.compareTo(y.key);
+        if (cmp < 0) {
+            y.left = node;
+        } else {
+            y.right = node;
+        }
+    } else {
+        this.root = node;
+    }
+
+    // 2.将node涂成红色
+    node.red = true;
+    
+    // 3.使用旋转跟涂色进行修复成红黑树
+    insertFixUp(node);
+}
+```
+
+### insertFixUp（）旋转涂色
