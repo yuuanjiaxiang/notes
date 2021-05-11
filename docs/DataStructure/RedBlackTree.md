@@ -200,3 +200,80 @@ private void insert(RBNode<T> node) {
 
 <img src="image/RBTreeInsertcase4.png" alt="image-20210510205859403"  />
 
+### 代码
+
+```java
+private void insertFixUp(RBNode<T> node) {
+    // case1 如果是根节点直接涂黑,跟case4涂黑定点重复，直接最后再涂
+    RBNode<T> parent, gparent;
+    // 如果父节点为红色
+    // 若“父节点存在，并且父节点的颜色是红色”
+    while (((parent = node.parent) != null) && parent.red) {
+        gparent = parent.parent;
+
+        //若“父节点”是“祖父节点的左孩子”
+        if (parent == gparent.left) {
+            // Case 1条件：叔叔节点是红色
+            RBNode<T> uncle = gparent.right;
+            if ((uncle != null) && uncle.red) {
+                uncle.red = false;
+                parent.red = false;
+                gparent.red = true;
+                node = gparent;
+                continue;
+            }
+
+            // Case 3条件：叔叔是黑色，且当前节点是右孩子
+            if (parent.right == node) {
+                RBNode<T> tmp;
+                leftRotate(parent);
+                tmp = parent;
+                parent = node;
+                node = tmp;
+            }
+
+            // Case 3条件：叔叔是黑色，且当前节点是左孩子。
+            parent.red = false;
+            gparent.red = true;
+            rightRotate(gparent);
+        } else {    //若“z的父节点”是“z的祖父节点的右孩子”
+            // Case 2条件：叔叔节点是红色
+            RBNode<T> uncle = gparent.left;
+            if ((uncle != null) && uncle.red) {
+                uncle.red = false;
+                parent.red = false;
+                gparent.red = true;
+                node = gparent;
+                continue;
+            }
+
+            // Case 2条件：叔叔是黑色，且当前节点是左孩子
+            if (parent.left == node) {
+                RBNode<T> tmp;
+                rightRotate(parent);
+                tmp = parent;
+                parent = node;
+                node = tmp;
+            }
+
+            // Case 4条件：叔叔是黑色，且当前节点是右孩子。
+            parent.red = false;
+            gparent.red = true;
+            leftRotate(gparent);
+        }
+    }
+    // 将根节点涂黑
+    root.red = false;
+}
+```
+
+根据这个思路写出的代码基本跟HashMap里对TreeNode 的balanceInsertion操作一样了
+
+## 删除
+
+https://blog.csdn.net/qq_40843865/article/details/102498310
+
+红黑树的删除步骤首先找到节点，然后递归的吧问题转换为删除叶子节点的问题；
+
+但是由于情况很复杂，这里我找了一篇讲解很详细的看一下
+

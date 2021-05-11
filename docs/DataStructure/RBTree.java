@@ -118,7 +118,66 @@ public class RBTree<T extends Comparable<T>> {
     }
 
     private void insertFixUp(RBNode<T> node) {
+        // case1 如果是根节点直接涂黑,跟case4涂黑定点重复，直接最后再涂
+        RBNode<T> parent, gparent;
+        // 如果父节点为红色
+        // 若“父节点存在，并且父节点的颜色是红色”
+        while (((parent = node.parent) != null) && parent.red) {
+            gparent = parent.parent;
 
+            //若“父节点”是“祖父节点的左孩子”
+            if (parent == gparent.left) {
+                // Case 1条件：叔叔节点是红色
+                RBNode<T> uncle = gparent.right;
+                if ((uncle != null) && uncle.red) {
+                    uncle.red = false;
+                    parent.red = false;
+                    gparent.red = true;
+                    node = gparent;
+                    continue;
+                }
+
+                // Case 3条件：叔叔是黑色，且当前节点是右孩子
+                if (parent.right == node) {
+                    RBNode<T> tmp;
+                    leftRotate(parent);
+                    tmp = parent;
+                    parent = node;
+                    node = tmp;
+                }
+
+                // Case 3条件：叔叔是黑色，且当前节点是左孩子。
+                parent.red = false;
+                gparent.red = true;
+                rightRotate(gparent);
+            } else {    //若“z的父节点”是“z的祖父节点的右孩子”
+                // Case 2条件：叔叔节点是红色
+                RBNode<T> uncle = gparent.left;
+                if ((uncle != null) && uncle.red) {
+                    uncle.red = false;
+                    parent.red = false;
+                    gparent.red = true;
+                    node = gparent;
+                    continue;
+                }
+
+                // Case 3条件：叔叔是黑色，且当前节点是左孩子
+                if (parent.left == node) {
+                    RBNode<T> tmp;
+                    rightRotate(parent);
+                    tmp = parent;
+                    parent = node;
+                    node = tmp;
+                }
+
+                // Case 4条件：叔叔是黑色，且当前节点是右孩子。
+                parent.red = false;
+                gparent.red = true;
+                leftRotate(gparent);
+            }
+        }
+        // 将根节点涂黑
+        root.red = false;
     }
 
 }
