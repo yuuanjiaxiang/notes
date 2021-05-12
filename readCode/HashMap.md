@@ -1,6 +1,6 @@
 # ConcurrentHashMap 
 
-<!-- toc -->
+[TOC]
 
 ## 1.继承关系
 
@@ -137,13 +137,69 @@ final void treeifyBin(Node<K,V>[] tab, int hash) {
 }
 ```
 
-### 3.2.TreeNode.treeify
+### 3.2.TreeNode.treeify()
 
-复习红黑树之后补充
+为什么要先把单链表转换为双向链表再转红黑树呢，我理解是由于`TreeNode`维护了父子节点的双向关系，以便更容易在各种操作中寻找父节点，而父->左/右子节点，子->父节点的双向关系跟双向链表是相似的，那么就只用构造树形结构了
+
+```java
+/**
+ * Forms tree of the nodes linked from this node.
+ */
+final void treeify(Node<K,V>[] tab) {
+    // 新建一颗树
+    TreeNode<K,V> root = null;
+    for (TreeNode<K,V> x = this, next; x != null; x = next) {
+        //遍历链表，还要把x择干净
+        next = (TreeNode<K,V>)x.next;
+        x.left = x.right = null;
+        // 树要是空的就把x设为根，涂黑
+        if (root == null) {
+            x.parent = null;
+            x.red = false;
+            root = x;
+        }
+        else {
+            // 要是已经存在根节点了，下面就跟红黑树的插入有点相似了
+            K k = x.key;
+            int h = x.hash;
+            Class<?> kc = null;
+            // 从根节点开始比较，先比较hash值
+            for (TreeNode<K,V> p = root;;) {
+                int dir, ph;
+                K pk = p.key;
+                if ((ph = p.hash) > h)
+                    dir = -1;
+                else if (ph < h)
+                    dir = 1;
+                // 要是hash值相等，在用key的compare方法，还是相等只能tieBreakOrder再比较了，反正不能相等，不然没法二叉树了
+                else if ((kc == null &&
+                          (kc = comparableClassFor(k)) == null) ||
+                         (dir = compareComparables(kc, k, pk)) == 0)
+                    dir = tieBreakOrder(k, pk);
+
+                TreeNode<K,V> xp = p;
+                //一直要找到叶子节点再把x插入
+                if ((p = (dir <= 0) ? p.left : p.right) == null) {
+                    x.parent = xp;
+                    if (dir <= 0)
+                        xp.left = x;
+                    else
+                        xp.right = x;
+                    // 再调整红黑树
+                    root = balanceInsertion(root, x);
+                    break;
+                }
+            }
+        }
+    }
+    // 多次调整后，根是哪个节点是不确定的，但是为了tab[N]为根节点，一定要把根节点作为链表头结点
+    moveRootToFront(tab, root);
+}
+```
 
 ### 3.3.TreeNode.putTreeVal(
 
-复习红黑树之后补充
+这个跟红黑树的插入是相似的，不过还是要跟`treeify()`一样吧根节点设为链表的头节点
 
 ## 4.get
 
@@ -237,5 +293,61 @@ final TreeNode<K,V> find(int h, Object k, Class<?> kc) {
  */
 final TreeNode<K,V> getTreeNode(int h, Object k) {
     return ((parent != null) ? root() : this).find(h, k, null);
+}
+```
+
+## 5.remove
+
+```java
+// matchValue 为ture 时，要key跟value都相等才删除，经常用在Entry的删除上
+matchValue
+final Node<K,V> removeNode(int hash, Object key, Object value,
+                           boolean matchValue, boolean movable) {
+    Node<K,V>[] tab; Node<K,V> p; int n, index;
+    // 数组不为空，并且头结点不为空，才能删除，否则返回null了
+    if ((tab = table) != null && (n = tab.length) > 0 &&
+        (p = tab[index = (n - 1) & hash]) != null) {
+        Node<K,V> node = null, e; K k; V v;
+        // 比较相等，hash+equals都成立，那就找到了，就是头结点P
+        if (p.hash == hash &&
+            ((k = p.key) == key || (key != null && key.equals(k))))
+            node = p;
+        else if ((e = p.next) != null) {
+            // 如果p还有下个节点，并且整个是个红黑树，那就用红黑树的查找节点的方法
+            if (p instanceof TreeNode)
+                node = ((TreeNode<K,V>)p).getTreeNode(hash, key);
+            // 是链表的话就一直next找下一个
+            else {
+                do {
+                    if (e.hash == hash &&
+                        ((k = e.key) == key ||
+                         (key != null && key.equals(k)))) {
+                        node = e;
+                        break;
+                    }
+                    p = e;
+                } while ((e = e.next) != null);
+            }
+        }
+        //只有找到了节点，并且，如果是匹配值删除value也相等，才会删除
+        if (node != null && (!matchValue || (v = node.value) == value ||
+                             (value != null && value.equals(v)))) {
+            // 红黑树调用红黑树的删除方法,其中，如果红黑树满足条件则进行退化成链表
+            if (node instanceof TreeNode)
+                ((TreeNode<K,V>)node).removeTreeNode(this, tab, movable);
+            // 如果是头结点，直接数组指向下一个节点
+            else if (node == p)
+                tab[index] = node.next;
+            else
+                // 跳过node指向下一个
+                p.next = node.next;
+            ++modCount;
+            --size;
+            // 为子类预留的方法，在LinkedHashMap中，实现了双向链表的删除操作
+            afterNodeRemoval(node);
+            return node;
+        }
+    }
+    return null;
 }
 ```

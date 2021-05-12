@@ -332,7 +332,7 @@ final Node<K,V> removeNode(int hash, Object key, Object value,
         //只有找到了节点，并且，如果是匹配值删除value也相等，才会删除
         if (node != null && (!matchValue || (v = node.value) == value ||
                              (value != null && value.equals(v)))) {
-            // 红黑树调用红黑树的删除方法
+            // 红黑树调用红黑树的删除方法,其中，如果红黑树满足条件则进行退化成链表
             if (node instanceof TreeNode)
                 ((TreeNode<K,V>)node).removeTreeNode(this, tab, movable);
             // 如果是头结点，直接数组指向下一个节点
