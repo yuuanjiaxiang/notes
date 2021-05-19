@@ -4,6 +4,8 @@
 
 <!-- toc -->
 
+https://blog.csdn.net/tp7309/article/details/76532366
+
 ## 1.继承关系
 
 ```java
@@ -111,6 +113,7 @@ final V putVal(K key, V value, boolean onlyIfAbsent) {
             }
         }
     }
+    // 这个里面巨复杂，大概就是对数组长度计数，并且实现了数组扩容
     addCount(1L, binCount);
     return null;
 }
@@ -143,7 +146,7 @@ private final void treeifyBin(Node<K,V>[] tab, int index) {
                             tl.next = p;
                         tl = p;
                     }
-                    // 转换为树，并且存在tab的indexz
+                    // 原子操作设置节点值
                     setTabAt(tab, index, new TreeBin<K,V>(hd));
                 }
             }
@@ -155,3 +158,32 @@ private final void treeifyBin(Node<K,V>[] tab, int index) {
 
 
 ## 3.get
+
+其实get主函数里并没有加锁的操作，因为对于`volatile`变量来说，根据同步缓存协议，变更会使其他任务线程的缓存失效，从而从主存读取；
+
+```java
+public V get(Object key) {
+    Node<K,V>[] tab; Node<K,V> e, p; int n, eh; K ek;
+    int h = spread(key.hashCode());
+    // 如果数组不为空
+    if ((tab = table) != null && (n = tab.length) > 0 &&
+        // 使用原子操作 tabAt 来获取（并发核心）
+        (e = tabAt(tab, (n - 1) & h)) != null) {
+        // 找到并且hash值，key值都相等，则返回头结点val
+        if ((eh = e.hash) == h) {
+            if ((ek = e.key) == key || (ek != null && key.equals(ek)))
+                return e.val;
+        }
+        // 此时在迁移或扩容
+        else if (eh < 0)
+            return (p = e.find(h, key)) != null ? p.val : null;
+        // 说明此时是个链表,直接遍历找出val;
+        while ((e = e.next) != null) {
+            if (e.hash == h &&
+                ((ek = e.key) == key || (ek != null && key.equals(ek))))
+                return e.val;
+        }
+    }
+    return null;
+}
+```
