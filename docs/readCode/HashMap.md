@@ -33,7 +33,97 @@ static final int UNTREEIFY_THRESHOLD = 6;
 static final int MIN_TREEIFY_CAPACITY = 64;
 ```
 
-## 3.put
+## 3.resize
+
+关键在于`e.hash &  oldCap== 0 `表明在数组中索引位置index没有变,比较容易推导
+
+`index == e.hash&(oldCap-1) == e.hash&(2*oldCap-1)`成立
+
+`(oldCap-1)^(2*oldCap-1)==oldCap`
+
+推导出=》`e.hash &  oldCap== 0`
+
+```java
+final Node<K,V>[] resize() {
+    //前面这部分比较简单，数组为空建个默认的，不为空看扩容后是否超过最大长度，进行扩容，重置数组，0阈值，大小
+    Node<K,V>[] oldTab = table;
+    int oldCap = (oldTab == null) ? 0 : oldTab.length;
+    int oldThr = threshold;
+    int newCap, newThr = 0;
+    if (oldCap > 0) {
+        if (oldCap >= MAXIMUM_CAPACITY) {
+            threshold = Integer.MAX_VALUE;
+            return oldTab;
+        }
+        else if ((newCap = oldCap << 1) < MAXIMUM_CAPACITY &&
+                 oldCap >= DEFAULT_INITIAL_CAPACITY)
+            newThr = oldThr << 1; // double threshold
+    }
+    else if (oldThr > 0) // initial capacity was placed in threshold
+        newCap = oldThr;
+    else {               // zero initial threshold signifies using defaults
+        newCap = DEFAULT_INITIAL_CAPACITY;
+        newThr = (int)(DEFAULT_LOAD_FACTOR * DEFAULT_INITIAL_CAPACITY);
+    }
+    if (newThr == 0) {
+        float ft = (float)newCap * loadFactor;
+        newThr = (newCap < MAXIMUM_CAPACITY && ft < (float)MAXIMUM_CAPACITY ?
+                  (int)ft : Integer.MAX_VALUE);
+    }
+    threshold = newThr;
+    @SuppressWarnings({"rawtypes","unchecked"})
+    //扩容后进行数组迁移
+    Node<K,V>[] newTab = (Node<K,V>[])new Node[newCap];
+    table = newTab;
+    if (oldTab != null) {
+        for (int j = 0; j < oldCap; ++j) {
+            Node<K,V> e;
+            if ((e = oldTab[j]) != null) {
+                oldTab[j] = null;
+                if (e.next == null)
+                    // 只有头结点就放到新位置
+                    newTab[e.hash & (newCap - 1)] = e;
+                else if (e instanceof TreeNode)
+                    // 树的话，跟链表一样根据 (e.hash & bit) == 0 拆成两条，小于退化阈值变链表，大于变树，再分别放到index位置上
+                    ((TreeNode<K,V>)e).split(this, newTab, j, oldCap);
+                else { // preserve order
+                    Node<K,V> loHead = null, loTail = null;
+                    Node<K,V> hiHead = null, hiTail = null;
+                    Node<K,V> next;
+                    do {
+                        next = e.next;
+                        if ((e.hash & oldCap) == 0) {
+                            if (loTail == null)
+                                loHead = e;
+                            else
+                                loTail.next = e;
+                            loTail = e;
+                        }
+                        else {
+                            if (hiTail == null)
+                                hiHead = e;
+                            else
+                                hiTail.next = e;
+                            hiTail = e;
+                        }
+                    } while ((e = next) != null);
+                    if (loTail != null) {
+                        loTail.next = null;
+                        newTab[j] = loHead;
+                    }
+                    if (hiTail != null) {
+                        hiTail.next = null;
+                        newTab[j + oldCap] = hiHead;
+                    }
+                }
+            }
+        }
+    }
+    return newTab;
+}
+```
+
+## 4.put
 
 像 `afterNode***` 这种方法都是为LinkedHashMap预留的，`HashMap`里的实现都是空的
 
@@ -104,7 +194,7 @@ final V putVal(int hash, K key, V value, boolean onlyIfAbsent,
 
 其中值得注意的是`treeifyBin()`方法，将链表转换为红黑树，需要再详细了解 `TreeNode.putTreeVal()`看一下实现
 
-### 3.1.treeifyBin()
+### 4.1.treeifyBin()
 
 ```java
 /**
@@ -137,7 +227,7 @@ final void treeifyBin(Node<K,V>[] tab, int hash) {
 }
 ```
 
-### 3.2.TreeNode.treeify()
+### 4.2.TreeNode.treeify()
 
 为什么要先把单链表转换为双向链表再转红黑树呢，我理解是由于`TreeNode`维护了父子节点的双向关系，以便更容易在各种操作中寻找父节点，而父->左/右子节点，子->父节点的双向关系跟双向链表是相似的，那么就只用构造树形结构了
 
@@ -197,11 +287,11 @@ final void treeify(Node<K,V>[] tab) {
 }
 ```
 
-### 3.3.TreeNode.putTreeVal(
+### 4.3.TreeNode.putTreeVal(
 
 这个跟红黑树的插入是相似的，不过还是要跟`treeify()`一样吧根节点设为链表的头节点
 
-## 4.get
+## 5.get
 
  get方法比较简单，只要找不到返回null就完事了，而且不涉及数据结构的变更
 
@@ -296,7 +386,7 @@ final TreeNode<K,V> getTreeNode(int h, Object k) {
 }
 ```
 
-## 5.remove
+## 6.remove
 
 ```java
 // matchValue 为ture 时，要key跟value都相等才删除，经常用在Entry的删除上
