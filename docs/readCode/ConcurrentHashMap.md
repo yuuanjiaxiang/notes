@@ -13,7 +13,7 @@ public class ConcurrentHashMap<K,V> extends AbstractMap<K,V>
     implements ConcurrentMap<K,V>, Serializable{}
 ```
 
-跟 `map` 一样，继承自 `AbstractMap` ,但是实现的 `ConcurrentMap` 接口，`ConcurrentMap`与`Map`接口区别主要在于是否允许`null`值，以及对于并发的操作是否抛出 `ConcurrentModificationException ` 异常，以及通过synchronized保障一些操作（compute，merge）的原子性,只要保证操作的原子性后，那我们使用volatile标识变量，就可以保整并发状态下的一致性，可见性，原子性
+跟 `map` 一样，继承自 `AbstractMap` ,但是实现的 `ConcurrentMap` 接口，`ConcurrentMap`与`Map`接口区别主要在于是否允许`null`值，以及对于并发的操作是否抛出 `ConcurrentModificationException ` 异常，以及通过synchronized保障一些操作（compute，merge）的原子性,只要保证操作的原子性后，那我们使用volatile标识变量，或者设定一个标识符，就可以保整并发状态下的一致性，可见性，原子性
 
 [volatile关键字详解]: https://www.cnblogs.com/dolphin0520/p/3920373.html
 
@@ -182,6 +182,90 @@ public V get(Object key) {
             if (e.hash == h &&
                 ((ek = e.key) == key || (ek != null && key.equals(ek))))
                 return e.val;
+        }
+    }
+    return null;
+}
+```
+
+## 4.remove(),replace()
+
+都是调用的`replaceNode`方法，只不过找到val的时候，判断一下vlaue参数是否为`null`，`remove`直接删除，`replace`替换
+
+```java
+// value 是新的，cv 不为null的话要找到的node.val== cv 才替换
+final V replaceNode(Object key, V value, Object cv) {
+    int hash = spread(key.hashCode());
+    for (Node<K,V>[] tab = table;;) {
+        Node<K,V> f; int n, i, fh;
+        // 数组为空或者index位置为空，直接跳出
+        if (tab == null || (n = tab.length) == 0 ||
+            (f = tabAt(tab, i = (n - 1) & hash)) == null)
+            break;
+        // 如果在扩容，调用helpTransfer帮助扩容
+        else if ((fh = f.hash) == MOVED)
+            tab = helpTransfer(tab, f);
+        else {
+            V oldVal = null;
+            boolean validated = false;
+            // 锁住头结点，保证是操作的并发性
+            synchronized (f) {
+                if (tabAt(tab, i) == f) {
+                    // 链表情况，循环查找
+                    if (fh >= 0) {
+                        validated = true;
+                        for (Node<K,V> e = f, pred = null;;) {
+                            K ek;
+                            if (e.hash == hash &&
+                                ((ek = e.key) == key ||
+                                 (ek != null && key.equals(ek)))) {
+                                V ev = e.val;
+                             	//remove跟replace的几种情况
+                                if (cv == null || cv == ev ||
+                                    (ev != null && cv.equals(ev))) {
+                                    oldVal = ev;
+                                    if (value != null)//replace
+                                        e.val = value;
+                                    else if (pred != null)//remove,且不是头结点
+                                        pred.next = e.next;
+                                    else//头结点使用原子操作
+                                        setTabAt(tab, i, e.next);
+                                }
+                                break;
+                            }
+                            pred = e;
+                            if ((e = e.next) == null)
+                                break;
+                        }
+                    }
+                    // 红黑树情况，查找使用findTreeNode,删除使用removeTreeNode，剩下的流程跟链表一样
+                    else if (f instanceof TreeBin) {
+                        validated = true;
+                        TreeBin<K,V> t = (TreeBin<K,V>)f;
+                        TreeNode<K,V> r, p;
+                        if ((r = t.root) != null &&
+                            (p = r.findTreeNode(hash, key, null)) != null) {
+                            V pv = p.val;
+                            if (cv == null || cv == pv ||
+                                (pv != null && cv.equals(pv))) {
+                                oldVal = pv;
+                                if (value != null)
+                                    p.val = value;
+                                else if (t.removeTreeNode(p))
+                                    setTabAt(tab, i, untreeify(t.first));
+                            }
+                        }
+                    }
+                }
+            }
+            if (validated) {
+                if (oldVal != null) {
+                    if (value == null)
+                        addCount(-1L, -1);
+                    return oldVal;
+                }
+                break;
+            }
         }
     }
     return null;
