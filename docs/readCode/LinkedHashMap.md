@@ -4,7 +4,7 @@
 
 ## 简介
 
-趁着热乎劲，赶紧看下`LinkedHashMap`，直观上来看，它依旧是一个`HashMap`，但是又是`Linked`,有序的链表,其实就是把节点穿插成双向链表
+趁着热乎劲，赶紧看下`LinkedHashMap`，直观上来看，它依旧是一个`HashMap`，但是又是`Linked`,有序的链表,其实就是把节点穿插成双向链表，由于继承的`hashMap`，所以它各种方法其实一样的，只不过在做完map的数组+链表/红黑树部分后，要把链表也做相应的操作，之前也看到过，具体方法为`afterNodeRemoval`,`afterNodeInsertion`,`afterNodeAccess`
 
 ![LinkedHashMap](image\LinkedHashMap.png)
 
@@ -41,3 +41,65 @@ transient LinkedHashMap.Entry<K,V> tail;
 */
 final boolean accessOrder;// true为访问顺序，false插入顺序，默认false
 ```
+
+## afterNodeRemoval
+
+移除节点后，把node从链表中删除，要考虑前后节点为空的问题
+
+```java
+void afterNodeRemoval(Node<K,V> e) { // unlink
+    LinkedHashMap.Entry<K,V> p =
+        (LinkedHashMap.Entry<K,V>)e, b = p.before, a = p.after;
+    p.before = p.after = null;
+    if (b == null)
+        head = a;
+    else
+        b.after = a;
+    if (a == null)
+        tail = b;
+    else
+        a.before = b;
+}
+```
+
+## afterNodeInsertion
+
+```java
+void afterNodeInsertion(boolean evict) { // possibly remove eldest
+    LinkedHashMap.Entry<K,V> first;
+    if (evict && (first = head) != null && removeEldestEntry(first)) {
+        K key = first.key;
+        removeNode(hash(key), key, null, false, true);
+    }
+}
+```
+
+## afterNodeAccess
+
+```java
+void afterNodeAccess(Node<K,V> e) { // move node to last
+    LinkedHashMap.Entry<K,V> last;
+    if (accessOrder && (last = tail) != e) {
+        LinkedHashMap.Entry<K,V> p =
+            (LinkedHashMap.Entry<K,V>)e, b = p.before, a = p.after;
+        p.after = null;
+        if (b == null)
+            head = a;
+        else
+            b.after = a;
+        if (a != null)
+            a.before = b;
+        else
+            last = b;
+        if (last == null)
+            head = p;
+        else {
+            p.before = last;
+            last.after = p;
+        }
+        tail = p;
+        ++modCount;
+    }
+}
+```
+
