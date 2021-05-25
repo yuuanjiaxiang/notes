@@ -4,3 +4,4 @@
 
 * [ConcurrentHashMap](ConcurrentHashMap.md)
 
+* [LinkedHashMap](LinkedHashMap.md)

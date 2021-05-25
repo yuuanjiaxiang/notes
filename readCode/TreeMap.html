@@ -1,0 +1,395 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>4.TreeMap · GitBook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="../DataStructure/" />
+    
+    
+    <link rel="prev" href="LinkedHashMap.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="../gitbook/gitbook.html">
+            
+                <a href="../gitbook/gitbook.html">
+            
+                    
+                    gitbook
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="readCode.html">
+            
+                <a href="readCode.html">
+            
+                    
+                    源码阅读
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="HashMap.html">
+            
+                <a href="HashMap.html">
+            
+                    
+                    1.HashMap
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2" data-path="ConcurrentHashMap.html">
+            
+                <a href="ConcurrentHashMap.html">
+            
+                    
+                    2.ConcurrentHashMap
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3" data-path="LinkedHashMap.html">
+            
+                <a href="LinkedHashMap.html">
+            
+                    
+                    3.LinkedHashMap
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.3.4" data-path="TreeMap.html">
+            
+                <a href="TreeMap.html">
+            
+                    
+                    4.TreeMap
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="../DataStructure/">
+            
+                <a href="../DataStructure/">
+            
+                    
+                    数据结构及算法
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1" data-path="../DataStructure/RedBlackTree.html">
+            
+                <a href="../DataStructure/RedBlackTree.html">
+            
+                    
+                    红黑树
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >4.TreeMap</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="treemap">TreeMap</h1>
+<p>[TOC]</p>
+<h2 id="&#x7B80;&#x4ECB;">&#x7B80;&#x4ECB;</h2>
+<p><code>TreeMap</code>&#x662F;&#x4E00;&#x4E2A;&#x76F4;&#x63A5;&#x7531;&#x7EA2;&#x9ED1;&#x6811;&#x5B9E;&#x73B0;&#x7684;&#x7ED3;&#x6784;&#xFF0C;&#x5BF9;&#x4E8E;<code>Key</code>&#x503C;&#x7684;&#x6BD4;&#x8F83;&#x6765;&#x6392;&#x5E8F;&#xFF0C;&#x663E;&#x7136;&#x5F97;&#x5230;&#xFF1A;</p>
+<p>1.key&#x7684;class&#x5FC5;&#x987B;&#x5B9E;&#x73B0;<code>comparable</code>&#x65B9;&#x6CD5;&#xFF0C; &#x4E0D;&#x80FD;&#x629B;&#x51FA;<code>ClassCastException</code>&#x5F02;&#x5E38;</p>
+<p>2.&#x7531;&#x4E8E;TreeMap&#x5B9E;&#x73B0;&#x4E86;<code>Serializable</code>&#x63A5;&#x53E3;&#xFF0C;&#x6240;&#x4EE5;&#x9ED8;&#x8BA4;&#x7684;&#x6216;&#x8005;&#x81EA;&#x5B9A;&#x4E49;&#x7684;<code>comparator</code>&#x4E5F;&#x5E94;&#x8BE5;&#x5B9E;&#x73B0;&#x8BE5;&#x63A5;&#x53E3;</p>
+<p>&#x6700;&#x91CD;&#x8981;&#x7684;&#x662F;&#xFF0C;&#x5B9E;&#x73B0;&#x4E86;<code>NavigableMap</code>&#xFF0C;&#x6211;&#x7406;&#x89E3;&#x4E3A;&#x5BFC;&#x822A;map,&#x63D0;&#x4F9B;&#x4E86;&#x5404;&#x79CD;&#x64CD;&#x4F5C;map&#x89C6;&#x56FE;&#x7684;&#x64CD;&#x4F5C;</p>
+<pre><code class="lang-java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TreeMap</span>&lt;<span class="hljs-title">K</span>,<span class="hljs-title">V</span>&gt;
+    <span class="hljs-keyword">extends</span> <span class="hljs-title">AbstractMap</span>&lt;<span class="hljs-title">K</span>,<span class="hljs-title">V</span>&gt;
+    <span class="hljs-keyword">implements</span> <span class="hljs-title">NavigableMap</span>&lt;<span class="hljs-title">K</span>,<span class="hljs-title">V</span>&gt;, <span class="hljs-title">Cloneable</span>, <span class="hljs-title">java</span>.<span class="hljs-title">io</span>.<span class="hljs-title">Serializable</span></span>{}
+</code></pre>
+<font size="5" color="#DC143C">&#x5177;&#x4F53;&#x7684;&#x7EA2;&#x9ED1;&#x6811;&#x7684;&#x64CD;&#x4F5C;&#x5728;&#x6B64;&#x4E0D;&#x4F5C;&#x8D58;&#x8FF0;</font>  
+
+<font size="5" color="blue">remove(),put()&#x6700;&#x6839;&#x672C;&#x7684;&#x64CD;&#x4F5C;&#x662F;&#x7EA2;&#x9ED1;&#x6811;&#x7684;&#x64CD;&#x4F5C;&#xFF0C;get()&#x4E5F;&#x662F;&#x4E8C;&#x53C9;&#x641C;&#x7D22;&#x6811;&#x6BD4;&#x8F83;&#x76F4;&#x89C2;&#x7684;&#x5B9E;&#x73B0;</font>
+
+
+
+<h2 id="successor-&#x67E5;&#x627E;&#x4E0B;&#x4E2A;&#x8282;&#x70B9;">successor() &#x67E5;&#x627E;&#x4E0B;&#x4E2A;&#x8282;&#x70B9;</h2>
+<ol>
+<li>&#x5728;<code>containsValue()</code>&#x4ECE;&#x7B2C;&#x4E00;&#x4E2A;&#x8282;&#x70B9;&#x5F00;&#x59CB;successor&#x904D;&#x5386;</li>
+<li>&#x5728;<code>forEach()</code>&#x4ECE;&#x7B2C;&#x4E00;&#x4E2A;&#x8282;&#x70B9;&#x5F00;&#x59CB;successor&#x904D;&#x5386;</li>
+<li><code>replaceAll()</code>&#x4ECE;&#x7B2C;&#x4E00;&#x4E2A;&#x8282;&#x70B9;&#x5F00;&#x59CB;successor&#x904D;&#x5386;&#x8D4B;&#x503C;&#x65B0;&#x7684;value</li>
+<li><code>remove()</code>&#x904D;&#x5386;&#x627E;&#x51FA;Object&#x5220;&#x9664;</li>
+</ol>
+<pre><code class="lang-java"><span class="hljs-keyword">static</span> &lt;K,V&gt; TreeMap.<span class="hljs-function">Entry&lt;K,V&gt; <span class="hljs-title">successor</span><span class="hljs-params">(Entry&lt;K,V&gt; t)</span> </span>{
+    <span class="hljs-comment">// &#x9996;&#x5148;&#x660E;&#x786E;&#xFF0C;&#x4E0B;&#x4E2A;&#x8282;&#x70B9;&#x662F;&#x6BD4;&#x5F53;&#x524D;&#x8282;&#x70B9;&#x5927;&#x7684;&#x8282;&#x70B9;&#xFF0C;&#x4E3A;&#x5F53;&#x524D;&#x8282;&#x70B9;&#x53F3;&#x8282;&#x70B9;&#x7684;&#x5DE6;&#x53F6;&#x5B50;&#x8282;&#x70B9;</span>
+    <span class="hljs-keyword">if</span> (t == <span class="hljs-keyword">null</span>)
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (t.right != <span class="hljs-keyword">null</span>) {
+        Entry&lt;K,V&gt; p = t.right;
+        <span class="hljs-keyword">while</span> (p.left != <span class="hljs-keyword">null</span>)
+            p = p.left;
+        <span class="hljs-keyword">return</span> p;
+    } <span class="hljs-keyword">else</span> {
+        Entry&lt;K,V&gt; p = t.parent;
+        Entry&lt;K,V&gt; ch = t;
+        <span class="hljs-comment">// &#x5F53;&#x53F3;&#x8282;&#x70B9;&#x4E3A;&#x7A7A;&#xFF0C;&#x5E76;&#x4E14;&#x662F;&#x7236;&#x8282;&#x70B9;&#x7684;&#x53F3;&#x8282;&#x70B9;&#x65F6;&#xFF0C;&#x4E0B;&#x4E2A;&#x8282;&#x70B9;&#x5F53;&#x524D;&#x5206;&#x652F;&#x6811;&#x7684;&#x7236;&#x8282;&#x70B9;</span>
+        <span class="hljs-keyword">while</span> (p != <span class="hljs-keyword">null</span> &amp;&amp; ch == p.right) {
+            ch = p;
+            p = p.parent;
+        }
+        <span class="hljs-comment">// &#x5F53;&#x53F3;&#x8282;&#x70B9;&#x4E3A;&#x7A7A;&#xFF0C;&#x5E76;&#x4E14;&#x662F;&#x7236;&#x8282;&#x70B9;&#x7684;&#x5DE6;&#x8282;&#x70B9;&#x65F6;&#xFF0C;&#x4E0B;&#x4E2A;&#x8282;&#x70B9;&#x5F53;&#x524D;&#x8282;&#x70B9;&#x7684;&#x7236;&#x8282;&#x70B9;</span>
+        <span class="hljs-keyword">return</span> p;
+    }
+}
+</code></pre>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="LinkedHashMap.html" class="navigation navigation-prev " aria-label="Previous page: 3.LinkedHashMap">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="../DataStructure/" class="navigation navigation-next " aria-label="Next page: 数据结构及算法">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"4.TreeMap","level":"1.3.4","depth":2,"next":{"title":"数据结构及算法","level":"1.4","depth":1,"path":"DataStructure/README.md","ref":"DataStructure/README.md","articles":[{"title":"红黑树","level":"1.4.1","depth":2,"path":"DataStructure/RedBlackTree.md","ref":"DataStructure/RedBlackTree.md","articles":[]}]},"previous":{"title":"3.LinkedHashMap","level":"1.3.3","depth":2,"path":"readCode/LinkedHashMap.md","ref":"readCode/LinkedHashMap.md","articles":[]},"dir":"ltr"},"config":{"plugins":["livereload"],"root":"docs","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"gitbook":"*"},"file":{"path":"readCode/TreeMap.md","mtime":"2021-05-25T17:25:59.722Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2021-05-25T16:38:49.045Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-livereload/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

@@ -1,0 +1,460 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>3.LinkedHashMap · GitBook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="TreeMap.html" />
+    
+    
+    <link rel="prev" href="ConcurrentHashMap.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="../gitbook/gitbook.html">
+            
+                <a href="../gitbook/gitbook.html">
+            
+                    
+                    gitbook
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="readCode.html">
+            
+                <a href="readCode.html">
+            
+                    
+                    源码阅读
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="HashMap.html">
+            
+                <a href="HashMap.html">
+            
+                    
+                    1.HashMap
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2" data-path="ConcurrentHashMap.html">
+            
+                <a href="ConcurrentHashMap.html">
+            
+                    
+                    2.ConcurrentHashMap
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.3.3" data-path="LinkedHashMap.html">
+            
+                <a href="LinkedHashMap.html">
+            
+                    
+                    3.LinkedHashMap
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.4" data-path="TreeMap.html">
+            
+                <a href="TreeMap.html">
+            
+                    
+                    4.TreeMap
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="../DataStructure/">
+            
+                <a href="../DataStructure/">
+            
+                    
+                    数据结构及算法
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1" data-path="../DataStructure/RedBlackTree.html">
+            
+                <a href="../DataStructure/RedBlackTree.html">
+            
+                    
+                    红黑树
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >3.LinkedHashMap</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="linkedhashmap">LinkedHashMap</h1>
+<p>[TOC]</p>
+<h2 id="&#x7B80;&#x4ECB;">&#x7B80;&#x4ECB;</h2>
+<p>&#x8D81;&#x7740;&#x70ED;&#x4E4E;&#x52B2;&#xFF0C;&#x8D76;&#x7D27;&#x770B;&#x4E0B;<code>LinkedHashMap</code>&#xFF0C;&#x76F4;&#x89C2;&#x4E0A;&#x6765;&#x770B;&#xFF0C;&#x5B83;&#x4F9D;&#x65E7;&#x662F;&#x4E00;&#x4E2A;<code>HashMap</code>&#xFF0C;&#x4F46;&#x662F;&#x53C8;&#x662F;<code>Linked</code>,&#x6709;&#x5E8F;&#x7684;&#x94FE;&#x8868;,&#x5176;&#x5B9E;&#x5C31;&#x662F;&#x628A;&#x8282;&#x70B9;&#x7A7F;&#x63D2;&#x6210;&#x53CC;&#x5411;&#x94FE;&#x8868;&#xFF0C;&#x7531;&#x4E8E;&#x7EE7;&#x627F;&#x7684;<code>hashMap</code>&#xFF0C;&#x6240;&#x4EE5;&#x5B83;&#x5404;&#x79CD;&#x65B9;&#x6CD5;&#x5176;&#x5B9E;&#x4E00;&#x6837;&#x7684;&#xFF0C;&#x53EA;&#x4E0D;&#x8FC7;&#x5728;&#x505A;&#x5B8C;map&#x7684;&#x6570;&#x7EC4;+&#x94FE;&#x8868;/&#x7EA2;&#x9ED1;&#x6811;&#x90E8;&#x5206;&#x540E;&#xFF0C;&#x8981;&#x628A;&#x94FE;&#x8868;&#x4E5F;&#x505A;&#x76F8;&#x5E94;&#x7684;&#x64CD;&#x4F5C;&#xFF0C;&#x4E4B;&#x524D;&#x4E5F;&#x770B;&#x5230;&#x8FC7;&#xFF0C;&#x5177;&#x4F53;&#x65B9;&#x6CD5;&#x4E3A;<code>afterNodeRemoval</code>,<code>afterNodeInsertion</code>,<code>afterNodeAccess</code></p>
+<p><img src="image/LinkedHashMap.png" alt="LinkedHashMap"></p>
+<p>&#x53CC;&#x5411;&#x94FE;&#x8868;&#xFF0C;&#x6BCF;&#x4E2A;&#x5143;&#x7D20;&#x9700;&#x8981;&#x8BB0;&#x5F55;&#x524D;&#x7F6E;&#x8282;&#x70B9;&#x8DDF;&#x540E;&#x7F6E;&#x8282;&#x70B9;&#xFF0C;&#x6574;&#x4E2A;Map&#x4E5F;&#x9700;&#x8981;&#x8BB0;&#x5F55;&#x5934;&#x7ED3;&#x70B9;&#x8DDF;&#x5C3E;&#x8282;&#x70B9;&#xFF0C;&#x6BD4;&#x8F83;&#x76F4;&#x89C2;</p>
+<pre><code class="lang-java"><span class="hljs-comment">/**
+ * HashMap.Node subclass for normal LinkedHashMap entries.
+ */</span>
+<span class="hljs-keyword">static</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Entry</span>&lt;<span class="hljs-title">K</span>,<span class="hljs-title">V</span>&gt; <span class="hljs-keyword">extends</span> <span class="hljs-title">HashMap</span>.<span class="hljs-title">Node</span>&lt;<span class="hljs-title">K</span>,<span class="hljs-title">V</span>&gt; </span>{
+    Entry&lt;K,V&gt; before, after;
+    Entry(<span class="hljs-keyword">int</span> hash, K key, V value, Node&lt;K,V&gt; next) {
+        <span class="hljs-keyword">super</span>(hash, key, value, next);
+    }
+}
+
+<span class="hljs-comment">/**
+ * The head (eldest) of the doubly linked list.
+ */</span>
+<span class="hljs-keyword">transient</span> LinkedHashMap.Entry&lt;K,V&gt; head;
+
+<span class="hljs-comment">/**
+ * The tail (youngest) of the doubly linked list.
+ */</span>
+<span class="hljs-keyword">transient</span> LinkedHashMap.Entry&lt;K,V&gt; tail;
+
+<span class="hljs-comment">/**
+* The iteration ordering method for this linked hash map: &lt;tt&gt;true&lt;/tt&gt;
+* for access-order, &lt;tt&gt;false&lt;/tt&gt; for insertion-order.
+*
+* <span class="hljs-doctag">@serial</span>
+*/</span>
+<span class="hljs-keyword">final</span> <span class="hljs-keyword">boolean</span> accessOrder;<span class="hljs-comment">// true&#x4E3A;&#x8BBF;&#x95EE;&#x987A;&#x5E8F;&#xFF0C;false&#x63D2;&#x5165;&#x987A;&#x5E8F;&#xFF0C;&#x9ED8;&#x8BA4;false</span>
+</code></pre>
+<h2 id="afternoderemoval">afterNodeRemoval</h2>
+<p>&#x79FB;&#x9664;&#x8282;&#x70B9;&#x540E;&#xFF0C;&#x628A;node&#x4ECE;&#x94FE;&#x8868;&#x4E2D;&#x5220;&#x9664;&#xFF0C;&#x8981;&#x8003;&#x8651;&#x524D;&#x540E;&#x8282;&#x70B9;&#x4E3A;&#x7A7A;&#x7684;&#x95EE;&#x9898;</p>
+<pre><code class="lang-java"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">afterNodeRemoval</span><span class="hljs-params">(Node&lt;K,V&gt; e)</span> </span>{ <span class="hljs-comment">// unlink</span>
+    LinkedHashMap.Entry&lt;K,V&gt; p =
+        (LinkedHashMap.Entry&lt;K,V&gt;)e, b = p.before, a = p.after;
+    p.before = p.after = <span class="hljs-keyword">null</span>;
+    <span class="hljs-keyword">if</span> (b == <span class="hljs-keyword">null</span>)
+        head = a;
+    <span class="hljs-keyword">else</span>
+        b.after = a;
+    <span class="hljs-keyword">if</span> (a == <span class="hljs-keyword">null</span>)
+        tail = b;
+    <span class="hljs-keyword">else</span>
+        a.before = b;
+}
+</code></pre>
+<h2 id="afternodeinsertion">afterNodeInsertion</h2>
+<p>&#x63D2;&#x5165;&#x8282;&#x70B9;&#x540E;&#x64CD;&#x4F5C;&#xFF0C;&#x5B9E;&#x9645;&#x4E0A;removeEldestEntry&#x603B;&#x662F;&#x8FD4;&#x56DE;false,&#x53EF;&#x4EE5;&#x901A;&#x8FC7;&#x8986;&#x5199;&#x8BE5;&#x65B9;&#x6CD5;&#x5B9E;&#x73B0;<strong>LRU&#x7F13;&#x5B58;</strong></p>
+<pre><code class="lang-java"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">afterNodeInsertion</span><span class="hljs-params">(<span class="hljs-keyword">boolean</span> evict)</span> </span>{ <span class="hljs-comment">// possibly remove eldest</span>
+    LinkedHashMap.Entry&lt;K,V&gt; first;
+    <span class="hljs-keyword">if</span> (evict &amp;&amp; (first = head) != <span class="hljs-keyword">null</span> &amp;&amp; removeEldestEntry(first)) {
+        K key = first.key;
+        removeNode(hash(key), key, <span class="hljs-keyword">null</span>, <span class="hljs-keyword">false</span>, <span class="hljs-keyword">true</span>);
+    }
+}
+</code></pre>
+<h2 id="afternodeaccess">afterNodeAccess</h2>
+<pre><code class="lang-java"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">afterNodeAccess</span><span class="hljs-params">(Node&lt;K,V&gt; e)</span> </span>{ <span class="hljs-comment">// move node to last</span>
+    LinkedHashMap.Entry&lt;K,V&gt; last;
+    <span class="hljs-comment">// &#x5982;&#x679C;&#x662F;&#x6309;&#x7167;&#x8BBF;&#x95EE;&#x987A;&#x5E8F;&#xFF0C;&#x90A3;&#x4E48;&#x628A;&#x8282;&#x70B9;e&#x4EA4;&#x6362;&#x5230;&#x5C3E;&#x8282;&#x70B9;</span>
+    <span class="hljs-keyword">if</span> (accessOrder &amp;&amp; (last = tail) != e) {
+        LinkedHashMap.Entry&lt;K,V&gt; p =
+            (LinkedHashMap.Entry&lt;K,V&gt;)e, b = p.before, a = p.after;
+        p.after = <span class="hljs-keyword">null</span>;
+        <span class="hljs-keyword">if</span> (b == <span class="hljs-keyword">null</span>)
+            head = a;
+        <span class="hljs-keyword">else</span>
+            b.after = a;
+        <span class="hljs-keyword">if</span> (a != <span class="hljs-keyword">null</span>)
+            a.before = b;
+        <span class="hljs-keyword">else</span>
+            last = b;
+        <span class="hljs-keyword">if</span> (last == <span class="hljs-keyword">null</span>)
+            head = p;
+        <span class="hljs-keyword">else</span> {
+            p.before = last;
+            last.after = p;
+        }
+        tail = p;
+        ++modCount;
+    }
+}
+</code></pre>
+<h2 id="&#x4F7F;&#x7528;linkedhashmap&#x5B9E;&#x73B0;lru&#x7F13;&#x5B58;">&#x4F7F;&#x7528;LinkedHashMap&#x5B9E;&#x73B0;LRU&#x7F13;&#x5B58;</h2>
+<p>&#x901A;&#x8FC7;override removeEldestEntry()&#x65B9;&#x6CD5;&#xFF0C;&#x5B9E;&#x73B0;&#x4E86;&#x4E00;&#x4E2A;&#x5927;&#x5C0F;&#x4E3A;cacheCapacity&#x7684;LRU&#x7F13;&#x5B58;&#x7C7B;</p>
+<pre><code class="lang-java"><span class="hljs-keyword">import</span> java.util.LinkedHashMap;
+<span class="hljs-keyword">import</span> java.util.Map;
+
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">LRUCache</span>&lt;<span class="hljs-title">K</span>, <span class="hljs-title">V</span>&gt; <span class="hljs-keyword">extends</span> <span class="hljs-title">LinkedHashMap</span>&lt;<span class="hljs-title">K</span>, <span class="hljs-title">V</span>&gt; <span class="hljs-keyword">implements</span> <span class="hljs-title">Map</span>&lt;<span class="hljs-title">K</span>, <span class="hljs-title">V</span>&gt; </span>{
+
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">long</span> serialVersionUID = <span class="hljs-number">1L</span>;
+
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> cacheCapacity;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">LRUCache</span><span class="hljs-params">(<span class="hljs-keyword">int</span> cacheCapacity, <span class="hljs-keyword">int</span> initialCapacity, <span class="hljs-keyword">float</span> loadFactor, <span class="hljs-keyword">boolean</span> accessOrder)</span> </span>{
+        <span class="hljs-keyword">super</span>(initialCapacity, loadFactor, accessOrder);
+        <span class="hljs-keyword">this</span>.cacheCapacity = cacheCapacity;
+    }
+
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">removeEldestEntry</span><span class="hljs-params">(java.util.Map.Entry&lt;K, V&gt; eldest)</span> </span>{
+        <span class="hljs-comment">// TODO Auto-generated method stub</span>
+        <span class="hljs-keyword">return</span> size() &gt; cacheCapacity;
+    }
+
+}
+</code></pre>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="ConcurrentHashMap.html" class="navigation navigation-prev " aria-label="Previous page: 2.ConcurrentHashMap">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="TreeMap.html" class="navigation navigation-next " aria-label="Next page: 4.TreeMap">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"3.LinkedHashMap","level":"1.3.3","depth":2,"next":{"title":"4.TreeMap","level":"1.3.4","depth":2,"path":"readCode/TreeMap.md","ref":"readCode/TreeMap.md","articles":[]},"previous":{"title":"2.ConcurrentHashMap","level":"1.3.2","depth":2,"path":"readCode/ConcurrentHashMap.md","ref":"readCode/ConcurrentHashMap.md","articles":[]},"dir":"ltr"},"config":{"plugins":["livereload"],"root":"docs","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"gitbook":"*"},"file":{"path":"readCode/LinkedHashMap.md","mtime":"2021-05-25T13:47:41.773Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2021-05-25T16:38:49.045Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-livereload/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+
