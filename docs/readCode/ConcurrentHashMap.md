@@ -4,8 +4,6 @@
 
 <!-- toc -->
 
-https://blog.csdn.net/tp7309/article/details/76532366
-
 ## 1.继承关系
 
 ```java
