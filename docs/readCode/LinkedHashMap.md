@@ -64,6 +64,8 @@ void afterNodeRemoval(Node<K,V> e) { // unlink
 
 ## afterNodeInsertion
 
+插入节点后操作，实际上removeEldestEntry总是返回false,可以通过覆写该方法实现**LRU缓存**
+
 ```java
 void afterNodeInsertion(boolean evict) { // possibly remove eldest
     LinkedHashMap.Entry<K,V> first;
@@ -79,6 +81,7 @@ void afterNodeInsertion(boolean evict) { // possibly remove eldest
 ```java
 void afterNodeAccess(Node<K,V> e) { // move node to last
     LinkedHashMap.Entry<K,V> last;
+    // 如果是按照访问顺序，那么把节点e交换到尾节点
     if (accessOrder && (last = tail) != e) {
         LinkedHashMap.Entry<K,V> p =
             (LinkedHashMap.Entry<K,V>)e, b = p.before, a = p.after;
@@ -103,3 +106,30 @@ void afterNodeAccess(Node<K,V> e) { // move node to last
 }
 ```
 
+## 使用LinkedHashMap实现LRU缓存
+
+通过override removeEldestEntry()方法，实现了一个大小为cacheCapacity的LRU缓存类
+
+```java
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+public class LRUCache<K, V> extends LinkedHashMap<K, V> implements Map<K, V> {
+
+    private static final long serialVersionUID = 1L;
+
+    private int cacheCapacity;
+
+    public LRUCache(int cacheCapacity, int initialCapacity, float loadFactor, boolean accessOrder) {
+        super(initialCapacity, loadFactor, accessOrder);
+        this.cacheCapacity = cacheCapacity;
+    }
+
+    @Override
+    protected boolean removeEldestEntry(java.util.Map.Entry<K, V> eldest) {
+        // TODO Auto-generated method stub
+        return size() > cacheCapacity;
+    }
+    
+}
+```
