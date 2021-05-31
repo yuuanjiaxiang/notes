@@ -1,0 +1,437 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>JavaIO · GitBook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="Reader.html" />
+    
+    
+    <link rel="prev" href="../readCode/TreeMap.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="../gitbook/gitbook.html">
+            
+                <a href="../gitbook/gitbook.html">
+            
+                    
+                    gitbook
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="../readCode/">
+            
+                <a href="../readCode/">
+            
+                    
+                    Java源码阅读
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="../readCode/HashMap.html">
+            
+                <a href="../readCode/HashMap.html">
+            
+                    
+                    1.HashMap
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2" data-path="../readCode/ConcurrentHashMap.html">
+            
+                <a href="../readCode/ConcurrentHashMap.html">
+            
+                    
+                    2.ConcurrentHashMap
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3" data-path="../readCode/LinkedHashMap.html">
+            
+                <a href="../readCode/LinkedHashMap.html">
+            
+                    
+                    3.LinkedHashMap
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.4" data-path="../readCode/TreeMap.html">
+            
+                <a href="../readCode/TreeMap.html">
+            
+                    
+                    4.TreeMap
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.4" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    JavaIO
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1" data-path="Reader.html">
+            
+                <a href="Reader.html">
+            
+                    
+                    1.Reader
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="../DataStructure/">
+            
+                <a href="../DataStructure/">
+            
+                    
+                    数据结构及算法
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.1" data-path="../DataStructure/RedBlackTree.html">
+            
+                <a href="../DataStructure/RedBlackTree.html">
+            
+                    
+                    红黑树
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >JavaIO</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="java-io&#x76F8;&#x5173;&#x77E5;&#x8BC6;">JAVA IO&#x76F8;&#x5173;&#x77E5;&#x8BC6;</h1>
+<p>[TOC]</p>
+<h2 id="java-io-&#x4E0E;nio&#x7684;&#x4E0D;&#x540C;&#xFF1A;"><font size="5" color="blue">Java IO &#x4E0E;NIO&#x7684;&#x4E0D;&#x540C;&#xFF1A;</font></h2>
+<ol>
+<li><p><code>IO</code>&#x662F;&#x9762;&#x5411;<code>stream</code>&#x7684;&#xFF0C;&#x53EF;&#x4EE5;&#x6307;&#x5B9A;&#x6BCF;&#x6B21;&#x8BFB;&#x53D6;&#x4E00;&#x5B9A;&#x957F;&#x5EA6;&#x7684;&#x5B57;&#x8282;&#xFF0C;&#x4F46;&#x662F;&#x4E0D;&#x80FD;&#x56DE;&#x9000;&#x7684;&#x8BBF;&#x95EE;&#x6570;&#x636E;&#xFF0C;&#x5982;&#x679C;&#x9700;&#x8981;&#x8FD9;&#x4E48;&#x505A;&#x5219;&#x5C0F;&#x628A;&#x4ED6;&#x5B58;&#x5728;&#x7F13;&#x5B58;&#x533A;&#x4E2D;</p>
+<p><code>NIO</code>&#x662F;&#x9762;&#x5411;<code>buffer</code>&#x7684;,&#x6570;&#x636E;&#x5148;&#x8BFB;&#x53D6;&#x5230;<code>buffer</code>&#x4E2D;&#xFF0C;&#x518D;&#x505A;&#x5904;&#x7406;&#xFF0C;&#x53EF;&#x4EE5;&#x5728;&#x5176;&#x4E2D;&#x8FDB;&#x884C;&#x6570;&#x636E;&#x7684;&#x524D;&#x540E;&#x8BBF;&#x95EE;</p>
+</li>
+<li><p><code>IO</code>&#x662F;<code>Blocking</code>&#x7684;&#xFF0C;&#x963B;&#x585E;&#x5F0F;&#x7684;&#xFF0C;&#x5BF9;&#x4E8E;&#x4E00;&#x4E2A;&#x7EBF;&#x7A0B;&#x8C03;&#x7528; read() &#x6216; write() &#x65F6;&#xFF0C;&#x8BE5;&#x7EBF;&#x7A0B;&#x5C06;&#x88AB;&#x963B;&#x585E;&#xFF0C;&#x76F4;&#x5230;&#x6709;&#x4E00;&#x4E9B;&#x6570;&#x636E;&#x8981;&#x8BFB;&#x53D6;&#xFF0C;&#x6216;&#x8005;&#x6570;&#x636E;&#x88AB;&#x5B8C;&#x5168;&#x5199;&#x5165;&#x3002;&#x7EBF;&#x7A0B;&#x5728;&#x6B64;&#x671F;&#x95F4;&#x4E0D;&#x80FD;&#x505A;&#x4EFB;&#x4F55;&#x5176;&#x4ED6;&#x4E8B;&#x60C5;</p>
+<p><code>NIO</code>&#x7684;<code>NO-Bloking</code>&#x7684;&#xFF0C;&#x7EBF;&#x7A0B;&#x4ECE;<code>channel</code>&#x8BFB;&#x5199;&#x6570;&#x636E;&#xFF0C;&#x53EA;&#x7528;&#x901A;&#x77E5;&#xFF0C;&#x5728;&#x8BFB;&#x5199;&#x5B8C;&#x6210;&#x65F6;&#x624D;&#x963B;&#x585E;&#x3002;&#x4E5F;&#x5C31;&#x662F;&#x8BF4;&#xFF0C;&#x4E00;&#x4E2A;&#x7EBF;&#x7A0B;&#x53EF;&#x4EE5;&#x540C;&#x65F6;&#x7BA1;&#x7406;&#x591A;&#x4E2A;channel</p>
+</li>
+</ol>
+<p><a href="https://blog.csdn.net/qwe6112071/article/details/71822185" target="_blank">https://blog.csdn.net/qwe6112071/article/details/71822185</a></p>
+<h2 id="io&#x786C;&#x4EF6;&#x539F;&#x7406;">IO&#x786C;&#x4EF6;&#x539F;&#x7406;</h2>
+<h3 id="io&#x786C;&#x4EF6;&#x8BBE;&#x5907;">IO&#x786C;&#x4EF6;&#x8BBE;&#x5907;</h3>
+<p>&#x5305;&#x62EC;&#x8F93;&#x5165;&#x8BBE;&#x5907;&#x4E0E;&#x8F93;&#x51FA;&#x8BBE;&#x5907;&#xFF0C;&#x6839;&#x636E;&#x5DE5;&#x4F5C;&#x65B9;&#x5F0F;&#x7684;&#x4E0D;&#x540C;&#xFF0C;&#x53EF;&#x4EE5;&#x5212;&#x5206;&#x4E3A;&#xFF1A;</p>
+<ol>
+<li>&#x5B57;&#x7B26;&#x8BBE;&#x5907;&#xFF1A;&#x6BD4;&#x5982;&#x952E;&#x76D8;&#xFF0C;&#x9F20;&#x6807;&#xFF0C;&#x663E;&#x793A;&#x5668;&#xFF0C;&#x626B;&#x63CF;&#x4EEA;&#x7B49;&#xFF0C;&#x4F20;&#x8F93;&#x7684;&#x4FE1;&#x606F;&#x6BD4;&#x8F83;&#x5C11;</li>
+<li>&#x5757;&#x8BBE;&#x5907;&#xFF1A;&#x5916;&#x90E8;&#x5B58;&#x50A8;&#x4ECB;&#x8D28;&#xFF0C;&#x7528;&#x6237;&#x901A;&#x8FC7;&#x8FD9;&#x4E9B;&#x8BBE;&#x5907;&#x5B9E;&#x73B0;&#x7A0B;&#x5E8F;&#x548C;&#x6570;&#x636E;&#x7684;&#x957F;&#x671F;&#x4FDD;&#x5B58;&#x3002;&#x4E0E;&#x5B57;&#x7B26;&#x8BBE;&#x5907;&#x76F8;&#x6BD4;&#xFF0C;&#x5B83;&#x4EEC;&#x662F;&#x4EE5;&#x5757;&#x4E3A;&#x5355;&#x4F4D;&#x8FDB;&#x884C;&#x4F20;&#x8F93;&#x7684;&#xFF0C;&#x5982;&#x78C1;&#x76D8;&#x3001;&#x78C1;&#x5E26;&#x548C;&#x5149;&#x76D8;&#x7B49;</li>
+<li>&#x7F51;&#x7EDC;&#x901A;&#x4FE1;&#x8BBE;&#x5907;&#xFF1A;&#x7F51;&#x5361;&#xFF0C;&#x8C03;&#x5236;&#x89E3;&#x8C03;&#x5668;&#x7B49;&#xFF0C;&#x7528;&#x6765;&#x4E0E;&#x8FDC;&#x7A0B;&#x8BBE;&#x5907;&#x8FDB;&#x884C;&#x901A;&#x4FE1;</li>
+</ol>
+<h3 id="io&#x56DB;&#x79CD;&#x63A7;&#x5236;&#x65B9;&#x5F0F;">IO&#x56DB;&#x79CD;&#x63A7;&#x5236;&#x65B9;&#x5F0F;</h3>
+<h4 id="1&#x76F4;&#x63A5;&#x7A0B;&#x5E8F;&#x63A7;&#x5236;">1.&#x76F4;&#x63A5;&#x7A0B;&#x5E8F;&#x63A7;&#x5236;</h4>
+<p>&#x7531;CPU&#x5168;&#x7A0B;&#x64CD;&#x4F5C;&#x63A7;&#x5236;&#x5668;&#x8FDB;&#x884C;&#x6570;&#x636E;&#x8BFB;&#x5199;&#xFF0C;&#x662F;CPU&#x4E0E;IO&#x8BBE;&#x5907;&#x4E32;&#x884C;&#x7684;&#xFF0C;&#x4F46;&#x662F;&#x7531;&#x4E8E;&#x4ED6;&#x4EEC;&#x7684;&#x5904;&#x7406;&#x901F;&#x5EA6;&#x8FDC;&#x4E0D;&#x5728;&#x4E00;&#x4E2A;&#x91CF;&#x7EA7;&#x4E0A;&#xFF0C;&#x5E76;&#x4E14;CPU&#x505A;&#x4E86;&#x8F6E;&#x8BE2;&#xFF0C;&#x6240;&#x4EE5;&#x6D6A;&#x8D39;&#x4E86;&#x5F88;&#x591A;CPU&#x7684;&#x6027;&#x80FD;</p>
+<p><img src="image/IOmathod1" alt="img"></p>
+<h4 id="2&#x4E2D;&#x65AD;&#x9A71;&#x52A8;&#x63A7;&#x5236;&#x65B9;&#x5F0F;">2.&#x4E2D;&#x65AD;&#x9A71;&#x52A8;&#x63A7;&#x5236;&#x65B9;&#x5F0F;</h4>
+<p><img src="image/IOmathod2" alt="img"></p>
+<p>&#x200B;    &#x5B9E;&#x9645;&#x4E0A;&#x662F;&#x4F18;&#x5316;&#x4E86;&#x8F6E;&#x8BE2;I/O&#x63A7;&#x5236;&#x5668;&#x72B6;&#x6001;&#xFF0C;&#x5728;&#x6B63;&#x5E38;&#x6216;&#x8005;&#x5F02;&#x5E38;&#x7ED3;&#x675F;&#x540E;&#xFF0C;&#x624D;&#x7ED9;CPU&#x53D1;&#x9001;&#x8BF7;&#x6C42;&#xFF0C;&#x4F46;&#x662F;CPU&#x4F9D;&#x7136;&#x53C2;&#x4E0E;&#x4E86;&#x4ECE;&#x8BBE;&#x5907;&#x5F80;&#x4E3B;&#x5B58;&#x8BFB;&#x5199;&#x5B57;&#x7684;&#x8FC7;&#x7A0B;&#xFF0C;&#x6BCF;&#x5199;&#x4E00;&#x4E2A;&#x5B57;&#x5C31;&#x8981;&#x4E2D;&#x65AD;&#x4E00;&#x6B21;&#x8C03;&#x8D77;CPU&#xFF0C;&#x56E0;&#x6B64;&#xFF0C;&#x53EF;&#x4EE5;&#x5728;&#x5916;&#x56F4;&#x8BBE;&#x5907;&#x641E;&#x4E2A;&#x7F13;&#x5B58;&#x6765;&#x51CF;&#x5C11;&#x4E2D;&#x65AD;&#x6B21;&#x6570;</p>
+<h4 id="3&#x76F4;&#x63A5;&#x5B58;&#x50A8;&#x5668;&#x8BBF;&#x95EE;&#x63A7;&#x5236;&#x65B9;&#x5F0F;&#xFF08;dma&#xFF09;">3.&#x76F4;&#x63A5;&#x5B58;&#x50A8;&#x5668;&#x8BBF;&#x95EE;&#x63A7;&#x5236;&#x65B9;&#x5F0F;&#xFF08;DMA&#xFF09;</h4>
+<p>&#x628A;CPU&#x4ECE;&#x4E00;&#x6B21;&#x4E00;&#x6B21;&#x7684;&#x8BFB;&#x5199;&#x5B57;&#x4E2D;&#x89E3;&#x653E;&#x51FA;&#x6765;&#xFF0C;&#x8BA9;DMA&#x53BB;&#x641E;&#xFF0C;CPU &#x63A5;&#x6536;&#x5230;I/O &#x8BBE;&#x5907;&#x7684;DMA &#x8BF7;&#x6C42;&#x65F6;&#xFF0C;&#x5B83;&#x7ED9;I/0 &#x63A7;&#x5236;&#x5668;&#x53D1;&#x51FA;&#x4E00;&#x6761;&#x547D;&#x4EE4;&#xFF0C;&#x542F;&#x52A8;DMA &#x63A7;&#x5236;&#x5668;&#xFF0C;&#x7136;&#x540E;&#x7EE7;&#x7EED;&#x5176;&#x4ED6;&#x5DE5;&#x4F5C;&#x3002;&#x4E4B;&#x540E;CPU &#x5C31;&#x628A;&#x63A7;&#x5236;&#x64CD;&#x4F5C;&#x59D4;&#x6258;&#x7ED9;DMA &#x63A7;&#x5236;&#x5668;&#xFF0C;&#x7531;&#x8BE5;&#x63A7;&#x5236;&#x5668;&#x8D1F;&#x8D23;&#x5904;&#x7406;&#x3002;DMA &#x63A7;&#x5236;&#x5668;&#x76F4;&#x63A5;&#x4E0E;&#x5B58;&#x50A8;&#x5668;&#x4EA4;&#x4E92;&#xFF0C;&#x4F20;&#x9001;&#x6574;&#x4E2A;&#x6570;&#x636E;&#x5757;&#xFF0C;&#x6BCF;&#x6B21;&#x4F20;&#x9001;&#x4E00;&#x4E2A;&#x5B57;&#xFF0C;&#x8FD9;&#x4E2A;&#x8FC7;&#x7A0B;&#x4E0D;&#x9700;&#x8981;CPU &#x53C2;&#x4E0E;&#x3002;&#x4F20;&#x9001;&#x5B8C;&#x6210;&#x540E;&#xFF0C;DMA &#x63A7;&#x5236;&#x5668;&#x53D1;&#x9001;&#x4E00;&#x4E2A;&#x4E2D;&#x65AD;&#x4FE1;&#x53F7;&#x7ED9;&#x5904;&#x7406;&#x5668;&#x3002;&#x56E0;&#x6B64;&#x53EA;&#x6709;&#x5728;&#x4F20;&#x9001;&#x5F00;&#x59CB;&#x548C;&#x7ED3;&#x675F;&#x65F6;&#x624D;&#x9700;&#x8981;CPU&#x7684;&#x53C2;&#x4E0E;(&#x9884;&#x5904;&#x7406;&#x3010;&#x8BBE;&#x7F6E;CR&#x3001;MAR&#x3001;DC&#x7B49;&#x3011;&#x548C;&#x540E;&#x5904;&#x7406;&#x3010;&#x4E2D;&#x65AD;&#x5904;&#x7406;&#x3001;&#x5524;&#x9192;&#x56E0;&#x8BE5;I/O&#x963B;&#x585E;&#x7684;&#x8FDB;&#x7A0B;&#x7A0B;&#x7B49;&#x3011;)</p>
+<p><img src="image/IOmathod3" alt="img"></p>
+<h4 id="4&#x901A;&#x9053;&#x65B9;&#x5F0F;">4.&#x901A;&#x9053;&#x65B9;&#x5F0F;</h4>
+<p>DMA &#x65B9;&#x5F0F;&#x4E0E;&#x7A0B;&#x5E8F;&#x4E2D;&#x65AD;&#x65B9;&#x5F0F;&#x76F8;&#x6BD4;&#xFF0C;&#x4F7F;&#x5F97;CPU&#x5BF9;IO&#x7684;&#x5E72;&#x9884;&#x4ECE;&#x5B57;(&#x5B57;&#x8282;) &#x4E3A;&#x5355;&#x4F4D;&#x7684;&#x51CF;&#x5C11;&#x5230;&#x4EE5;&#x6570;&#x636E;&#x5757;&#x4E3A;&#x5355;&#x4F4D;&#x3002;&#x800C;&#x4E14;&#xFF0C;&#x6BCF;&#x6B21; CPU&#x5E72;&#x4E88;&#x65F6;&#xFF0C;&#x5E76;&#x4E0D;&#x8981;&#x505A;&#x6570;&#x636E;&#x62F7;&#x8D1D;&#xFF0C;&#x4EC5;&#x4EC5;&#x9700;&#x8981;&#x53D1;&#x4E00;&#x6761;&#x542F;&#x52A8; I/O &#x6307; &#x4EE4; &#xFF0C;&#x4EE5;&#x53CA;&#x5B8C;&#x6210; I/O &#x7ED3;&#x675F;&#x4E2D;&#x65AD;&#x5904;&#x7406;&#x3002;
+&#x4F46;&#x662F;&#xFF0C;&#x6BCF;&#x53D1;&#x51FA;&#x4E00;&#x6B21;I/O&#x6307;&#x4EE4;&#xFF0C;&#x53EA;&#x80FD;&#x8BFB;&#x5199;&#x4E00;&#x4E2A;&#x6570;&#x636E;&#x5757;&#xFF0C;&#x5982;&#x679C;&#x7528;&#x6237;&#x5E0C;&#x671B;&#x4E00;&#x6B21;&#x8BFB;&#x5199;&#x591A;&#x4E2A;&#x79BB;&#x6563;&#x7684;&#x6570;&#x636E;&#x5757;&#xFF0C;&#x5E76;&#x80FD;&#x628A;&#x5B83;&#x4EEC;&#x4F20;&#x9001;&#x5230;&#x4E0D;&#x540C;&#x7684;&#x5185;&#x5B58;&#x533A;&#x57DF;&#xFF0C;&#x6216;&#x76F8;&#x53CD;&#x65F6;&#xFF0C;&#x5219;&#x9700;&#x8981;&#x7531;CPU&#x5206;&#x522B;&#x53D1;&#x51FA;&#x591A;&#x6761;&#x542F;&#x52A8;I/O&#x6307;&#x4EE4;&#x53CA;&#x8FDB;&#x884C;&#x591A;&#x6B21; I/O &#x4E2D;&#x65AD;&#x5904;&#x7406;&#x624D;&#x80FD;&#x5B8C;&#x6210;&#x3002;
+&#x901A;&#x9053;&#x65B9;&#x5F0F;&#x8FDB;&#x4E00;&#x6B65;&#x51CF;&#x5C11;&#x4E86;CPU&#x5BF9;I/O&#x64CD;&#x4F5C;&#x7684;&#x5E72;&#x4E88;&#xFF0C;&#x51CF;&#x5C11;&#x4E3A;&#x5BF9;&#x591A;&#x4E2A;&#x6570;&#x636E;&#x5757;&#xFF0C;&#x800C;&#x4E0D;&#x662F;&#x4EC5;&#x4EC5;&#x4E00;&#x4E2A;&#x6570;&#x636E;&#x5757;&#xFF0C;&#x53CA;&#x6709;&#x5173;&#x7BA1;&#x7406;&#x548C;&#x63A7;&#x5236;&#x7684;&#x5E72;&#x4E88;&#x3002;
+&#x901A;&#x9053;&#x53C8;&#x79F0;&#x8F93;&#x5165;&#x8F93;&#x51FA;&#x5904;&#x7406;&#x5668;&#x3002;&#x5B83;&#x80FD;&#x5B8C;&#x6210;&#x4E3B;&#x5B58;&#x50A8;&#x5668;&#x548C;&#x5916;&#x56F4;&#x8BBE;&#x5907;&#x4E4B;&#x95F4;&#x7684;&#x4FE1;&#x606F;&#x4F20;&#x9001;&#xFF0C;&#x4E0E;&#x4E2D;&#x592E;&#x5904;&#x7406;&#x5668;&#x5E76;&#x884C;&#x5730;&#x6267;&#x884C;&#x64CD;&#x4F5C;&#x3002;
+&#x91C7;&#x7528;&#x8F93;&#x5165;&#x8F93;&#x51FA;&#x901A;&#x9053;&#x8BBE;&#x8BA1;&#x540E;&#xFF0C;&#x8F93;&#x5165;&#x8F93;&#x51FA;&#x64CD;&#x4F5C;&#x8FC7;&#x7A0B;&#x5982;&#x4E0B;&#xFF1A;</p>
+<ol>
+<li>&#x4E2D;&#x592E;&#x5904;&#x7406;&#x673A;&#x5728;&#x6267;&#x884C;&#x4E3B;&#x7A0B;&#x5E8F;&#x65F6;&#x9047;&#x5230;&#x8F93;&#x5165;&#x8F93;&#x51FA;&#x8BF7;&#x6C42;</li>
+<li>&#x542F;&#x52A8;&#x6307;&#x5B9A;&#x901A;&#x9053;&#x4E0A;&#x9009;&#x5740;&#x7684;&#x5916;&#x56F4;&#x8BBE;&#x5907;&#xFF0C;&#x4E00;&#x65E6;&#x542F;&#x52A8;&#x6210;&#x529F;&#xFF0C;&#x901A;&#x9053;&#x5F00;&#x59CB;&#x63A7;&#x5236;&#x5916;&#x56F4;&#x8BBE;&#x5907;&#x8FDB;&#x884C;&#x64CD;&#x4F5C;&#x3002;</li>
+<li>&#x8FD9;&#x65F6;&#x4E2D;&#x592E;&#x5904;&#x7406;&#x5668;&#x5C31;&#x53EF;&#x6267;&#x884C;&#x5176;&#x5B83;&#x4EFB;&#x52A1;&#x5E76;&#x4E0E;&#x901A;&#x9053;&#x5E76;&#x884C;&#x5DE5;&#x4F5C;&#xFF0C;&#x76F4;&#x5230;&#x8F93;&#x5165;&#x8F93;&#x51FA;&#x64CD;&#x4F5C;&#x5B8C;&#x6210;&#x3002;</li>
+<li>&#x901A;&#x9053;&#x53D1;&#x51FA;&#x64CD;&#x4F5C;&#x7ED3;&#x675F;&#x4E2D;&#x65AD;&#x65F6;&#xFF0C;&#x4E2D;&#x592E;&#x5904;&#x7406;&#x5668;&#x624D;&#x505C;&#x6B62;&#x5F53;&#x524D;&#x5DE5;&#x4F5C;&#xFF0C;&#x8F6C;&#x5411;&#x5904;&#x7406;&#x8F93;&#x5165;&#x8F93;&#x51FA;&#x64CD;&#x4F5C;&#x7ED3;&#x675F;&#x4E8B;&#x4EF6;&#x3002;</li>
+</ol>
+<p>&#x6309;&#x7167;&#x4FE1;&#x606F;&#x4EA4;&#x6362;&#x65B9;&#x5F0F;&#x548C;&#x52A0;&#x63A5;&#x8BBE;&#x5907;&#x79CD;&#x7C7B;&#x4E0D;&#x540C;&#xFF0C;&#x901A;&#x9053;&#x53EF;&#x5206;&#x4E3A;&#x4E09;&#x79CD;&#x7C7B;&#x578B;&#xFF1A;</p>
+<p><strong>&#x901A;&#x9053;&#x7C7B;&#x578B;</strong>
+&#x5B57;&#x8282;&#x591A;&#x8DEF;&#x901A;&#x9053;
+&#x5B83;&#x662F;&#x4E3A;&#x8FDE;&#x63A5;&#x5927;&#x91CF;&#x6162;&#x901F;&#x5916;&#x56F4;&#x8BBE;&#x5907;&#xFF0C;&#x5982;&#x8F6F;&#x76D8;&#x8F93;&#x5165;&#x8F93;&#x51FA;&#x673A;&#x3001;&#x7EB8;&#x5E26;&#x8F93;&#x5165;&#x8F93;&#x51FA;&#x673A;&#x3001;&#x5361;&#x7247;&#x8F93;&#x5165;&#x8F93;&#x51FA;&#x673A;&#x3001;&#x63A7;&#x5236;&#x53F0;&#x6253;&#x5B57;&#x673A;&#x7B49;&#x8BBE;&#x7F6E;&#x7684;&#x3002;&#x4EE5;&#x5B57;&#x8282;&#x4E3A;&#x5355;&#x4F4D;&#x4EA4;&#x53C9;&#x5730;&#x5DE5;&#x4F5C;&#xFF0C;&#x5F53;&#x4E3A;&#x4E00;&#x53F0;&#x8BBE;&#x5907;&#x4F20;&#x9001;&#x4E00;&#x4E2A;&#x5B57;&#x8282;&#x540E;&#xFF0C;&#x7ACB;&#x5373;&#x8F6C;&#x53BB;&#x4E3A;&#x53E6;&#x4E00;&#x53F0;&#x8BBE;&#x5907;&#x4F20;&#x9001;&#x4E00;&#x4E2A;&#x5B57;&#x8282;&#x3002;&#x5728;IBM370&#x7CFB;&#x7EDF;&#x4E2D;&#xFF0C;&#x8FD9;&#x6837;&#x7684;&#x901A;&#x9053;&#x53EF;&#x63A5; 256 &#x53F0;&#x8BBE;&#x5907;&#x3002;</p>
+<p><strong>&#x9009;&#x62E9;&#x901A;&#x9053;</strong>
+&#x5B83;&#x7528;&#x4E8E;&#x8FDE;&#x63A5;&#x78C1;&#x5E26;&#x548C;&#x78C1;&#x76D8;&#x5FEB;&#x901F;&#x8BBE;&#x5907;&#x3002;&#x4EE5;&#x6210;&#x7EC4;&#x65B9;&#x5F0F;&#x5DE5;&#x4F5C;&#xFF0C;&#x6BCF;&#x6B21;&#x4F20;&#x9001;&#x4E00;&#x6279;&#x6570;&#x636E;&#xFF1B;&#x6545;&#x4F20;&#x9001;&#x901F;&#x5EA6;&#x5F88;&#x9AD8;&#xFF0C;&#x4F46;&#x5728;&#x8FD9;&#x6BB5;&#x65F6;&#x95F4;&#x53EA;&#x80FD;&#x4E3A;&#x4E00;&#x53F0;&#x8BBE;&#x5907;&#x670D;&#x52A1;&#x3002;&#x6BCF;&#x5F53;&#x4E00;&#x4E2A;&#x8F93;&#x5165;&#x8F93;&#x51FA;&#x64CD;&#x4F5C;&#x8BF7;&#x6C42;&#x5B8C;&#x6210;&#x540E;&#xFF0C;&#x518D;&#x9009;&#x62E9;&#x4E0E;&#x901A;&#x9053;&#x76F8;&#x8FDE;&#x63A5;&#x7684;&#x53E6;&#x4E00;&#x8BBE;&#x5907;&#x3002;</p>
+<p><strong>&#x6570;&#x7EC4;&#x591A;&#x8DEF;&#x901A;&#x9053;</strong>
+&#x5BF9;&#x4E8E;&#x78C1;&#x76D8;&#x8FD9;&#x6837;&#x7684;&#x5916;&#x56F4;&#x8BBE;&#x5907;&#xFF0C;&#x867D;&#x7136;&#x4F20;&#x8F93;&#x4FE1;&#x606F;&#x5F88;&#x5FEB;&#xFF0C;&#x4F46;&#x662F;&#x79FB;&#x81C2;&#x5B9A;&#x4F4D;&#x65F6;&#x95F4;&#x5F88;&#x957F;&#x3002;</p>
+<ol>
+<li>&#x5982;&#x679C;&#x63A5;&#x5728;&#x5B57;&#x8282;&#x591A;&#x8DEF;&#x901A;&#x9053;&#x4E0A;&#xFF0C;&#x90A3;&#x4E48;&#x901A;&#x9053;&#x5F88;&#x96BE;&#x627F;&#x53D7;&#x8FD9;&#x6837;&#x9AD8;&#x7684;&#x4F20;&#x8F93;&#x7387;&#xFF1B;</li>
+<li>&#x5982;&#x679C;&#x63A5;&#x5728;&#x9009;&#x62E9;&#x901A;&#x9053;&#x4E0A;&#xFF0C;&#x90A3;&#x4E48;&#xFF1B;&#x78C1;&#x76D8;&#x81C2;&#x79FB;&#x52A8;&#x6240;&#x82B1;&#x8D39;&#x7684;&#x8F83;&#x957F;&#x65F6;&#x95F4;&#x5185;&#xFF0C;&#x901A;&#x9053;&#x53EA;&#x80FD;&#x7A7A;&#x7B49;&#x3002;</li>
+</ol>
+<p>&#x6570;&#x7EC4;&#x591A;&#x8DEF;&#x901A;&#x9053;&#x53EF;&#x4EE5;&#x89E3;&#x51B3;&#x8FD9;&#x4E2A;&#x77DB;&#x76FE;&#xFF0C;&#x5B83;&#x5148;&#x4E3A;&#x4E00;&#x53F0;&#x8BBE;&#x5907;&#x6267;&#x884C;&#x4E00;&#x6761;&#x901A;&#x9053;&#x547D;&#x4EE4;&#xFF0C;&#x7136;&#x540E;&#x81EA;&#x52A8;&#x8F6C;&#x6362;&#xFF0C;&#x4E3A;&#x53E6;&#x4E00;&#x53F0;&#x8BBE;&#x5907;&#x6267;&#x884C;&#x4E00;&#x6761;&#x901A;&#x9053;&#x547D;&#x4EE4;&#x3002;</p>
+<p>&#x5BF9;&#x4E8E;&#x8FDE;&#x63A5;&#x5728;&#x6570;&#x7EC4;&#x591A;&#x8DEF;&#x901A;&#x9053;&#x4E0A;&#x7684;&#x82E5;&#x5E72;&#x53F0;&#x78C1;&#x76D8;&#x673A;&#xFF0C;&#x53EF;&#x4EE5;&#x542F;&#x52A8;&#x5B83;&#x4EEC;&#x540C;&#x65F6;&#x8FDB;&#x884C;&#x79FB;&#x81C2;&#xFF0C;&#x67E5;&#x627E;&#x6B32;&#x8BBF;&#x95EE;&#x7684;&#x67F1;&#x9762;&#xFF0C;&#x7136;&#x540E;&#xFF0C;&#x6309;&#x6B21;&#x5E8F;&#x4EA4;&#x53C9;&#x4F20;&#x8F93;&#x4E00;&#x6279;&#x6279;&#x4FE1;&#x606F;&#xFF0C;&#x8FD9;&#x6837;&#x5C31;&#x907F;&#x514D;&#x4E86;&#x79FB;&#x81C2;&#x64CD;&#x4F5C;&#x8FC7;&#x957F;&#x5730;&#x5360;&#x7528;&#x901A;&#x9053;&#x3002;&#x7531;&#x4E8E;&#x5B83;&#x5728;&#x4EFB;&#x4E00;&#x65F6;&#x523B;&#x53EA;&#x80FD;&#x4E3A;&#x4E00;&#x53F0;&#x8BBE;&#x5907;&#x4F5C;&#x6570;&#x636E;&#x4F20;&#x9001;&#x670D;&#x52A1;&#xFF0C;&#x8FD9;&#x7C7B;&#x4F3C;&#x4E8E;&#x9009;&#x62E9;&#x901A;&#x9053;&#xFF1B;&#x4F46;&#x5B83;&#x4E0D;&#x7B49;&#x6574;&#x4E2A;&#x901A;&#x9053;&#x7A0B;&#x5E8F;&#x6267;&#x884C;&#x7ED3;&#x675F;&#x5C31;&#x80FD;&#x6267;&#x884C;&#x53E6;&#x4E00;&#x8BBE;&#x5907;&#x7684;&#x901A;&#x9053;&#x7A0B;&#x5E8F;&#x547D;&#x4EE4;&#xFF0C;&#x8FD9;&#x7C7B;&#x4F3C;&#x4E8E;&#x5B57;&#x8282;&#x591A;&#x8DEF;&#x901A;&#x9053;&#x3002;</p>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="../readCode/TreeMap.html" class="navigation navigation-prev " aria-label="Previous page: 4.TreeMap">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="Reader.html" class="navigation navigation-next " aria-label="Next page: 1.Reader">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"JavaIO","level":"1.4","depth":1,"next":{"title":"1.Reader","level":"1.4.1","depth":2,"path":"JavaIO/Reader.md","ref":"JavaIO/Reader.md","articles":[]},"previous":{"title":"4.TreeMap","level":"1.3.4","depth":2,"path":"readCode/TreeMap.md","ref":"readCode/TreeMap.md","articles":[]},"dir":"ltr"},"config":{"plugins":["livereload"],"root":"docs","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"gitbook":"*"},"file":{"path":"JavaIO/README.md","mtime":"2021-05-31T14:41:41.517Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2021-05-31T14:42:33.021Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-livereload/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+
