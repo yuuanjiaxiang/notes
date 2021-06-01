@@ -8,7 +8,8 @@
     * [3.LinkedHashMap](readCode/LinkedHashMap.md)
     * [4.TreeMap](readCode/TreeMap.md)
 * [JavaIO](JavaIO/README.md)
-    * [1.Reader](JavaIO/Reader.md)
+    * [1.Buffer](JavaIO/Buffer.md)
+    * [2.Reader](JavaIO/Reader.md)
 * [数据结构及算法](DataStructure/README.md)
-    * [红黑树](DataStructure/RedBlackTree.md)
+    * [1.红黑树](DataStructure/RedBlackTree.md)
 

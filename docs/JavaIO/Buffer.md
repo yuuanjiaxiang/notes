@@ -99,4 +99,3 @@ charBuffer.mark()
 ![BufferPut](image\BufferMark.jpg)
 
 
-
