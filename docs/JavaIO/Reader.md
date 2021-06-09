@@ -97,3 +97,4 @@ public long skip(long n) throws IOException {
 writer实在没什么新意，大部分与OutputStream与Reader的思想是一致的，就不再啰嗦了
 
 子类必须实现`write(char[], int, int), flush(), close()`
+
