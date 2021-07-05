@@ -29,7 +29,7 @@ public class MyFileFilter implements FileFilter{
 
 ### File读取通道
 
-
+`FileInputStream`,`FileOutputStream`,`RandomAccessFile`都可以使用`getChannel()`方法直接开辟一个通道来读写
 
 
 
