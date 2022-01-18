@@ -226,76 +226,59 @@ RDB模式
   ```properties
   stop-writes-on-bgsave-error  yes     #默认开启
   ```
+  
+- ### **rdbcompression**
+  在生成.rdb文件时，是否使用LZF压缩字符串，如果压缩则会提高CPU负载
+  不使用的话则生成的rdb文件会比较大
+    ```properties
+  rdbcompression  yes     #默认开启
+  ```
+
+- ### **rdbchecksum**
+  从RDB 5开始，会在结尾使用CRC64计算校验和，大概耗费10%的性能
+  
+  关闭的话会结尾校验和置为0
+    ```properties
+  rdbchecksum  yes     #默认开启
+  ```
+
+- ### **dbfilename**
+  rdb保存文件名
+    ```properties
+  dbfilename dump.rdb     #默认名称
+  ```
+
+- ### **dir**
+  rdb保存工作路径
+    ```properties
+  dir ./     #默认路径
+  ```
+
+## REPLICATION主从复制
+
+主从复制细节这里就不展开了，只看配置
+
+```properties
+slaveof <masterip> <masterport>  #绑定master的IP跟端口
+  ```
+
+- ### **masterauth**
+  如果master使用requirepass进行了密码保护，则需要配置密码，否则master会拒接slave请求
+    ```properties
+  masterauth <master-password>     #默认路径
+  ```
 
 
+- ### **slave-serve-stale-data**
+  当slave断开与master的链接的时候，或者slave同步仍未完成
 
+    ```properties
+  #开启的时候会根据过时数据回复客户端请求，如果当时是第一次同步，则数据集可能为空
+  slave-serve-stale-data yes
 
-
-Compress string objects using LZF when dump .rdb databases?
-For default that's set to 'yes' as it's almost always a win.
-If you want to save some CPU in the saving child set it to 'no' but
-the dataset will likely be bigger if you have compressible values or keys.
-rdbcompression yes
-
-Since version 5 of RDB a CRC64 checksum is placed at the end of the file.
-This makes the format more resistant to corruption but there is a performance
-hit to pay (around 10%) when saving and loading RDB files, so you can disable it
-for maximum performances.
-
-RDB files created with checksum disabled have a checksum of zero that will
-tell the loading code to skip the check.
-rdbchecksum yes
-
-The filename where to dump the DB
-dbfilename dump.rdb
-
-The working directory.
-
-The DB will be written inside this directory, with the filename specified
-above using the 'dbfilename' configuration directive.
-
-The Append Only File will also be created inside this directory.
-
-Note that you must specify a directory here, not a file name.
-dir ./
-
-REPLICATION
-
-Master-Slave replication. Use slaveof to make a Redis instance a copy of
-another Redis server. A few things to understand ASAP about Redis replication.
-
-1) Redis replication is asynchronous, but you can configure a master to
-   stop accepting writes if it appears to be not connected with at least
-   a given number of slaves.
-2) Redis slaves are able to perform a partial resynchronization with the
-   master if the replication link is lost for a relatively small amount of
-   time. You may want to configure the replication backlog size (see the next
-   sections of this file) with a sensible value depending on your needs.
-3) Replication is automatic and does not need user intervention. After a
-   network partition slaves automatically try to reconnect to masters
-   and resynchronize with them.
-
-slaveof <masterip> <masterport>
-
-If the master is password protected (using the "requirepass" configuration
-directive below) it is possible to tell the slave to authenticate before
-starting the replication synchronization process, otherwise the master will
-refuse the slave request.
-
-masterauth <master-password>
-
-When a slave loses its connection with the master, or when the replication
-is still in progress, the slave can act in two different ways:
-
-1) if slave-serve-stale-data is set to 'yes' (the default) the slave will
-   still reply to client requests, possibly with out of date data, or the
-   data set may just be empty if this is the first synchronization.
-
-2) if slave-serve-stale-data is set to 'no' the slave will reply with
-   an error "SYNC with master in progress" to all the kind of commands
-   but to INFO and SLAVEOF.
-
-slave-serve-stale-data yes
+  #关闭的时候，会统一按照SYNC with master in progress回复请求
+  slave-serve-stale-data no
+  ```
 
 You can configure a slave instance to accept writes or not. Writing against
 a slave instance may be useful to store some ephemeral data (because data
