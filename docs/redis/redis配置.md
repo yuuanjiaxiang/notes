@@ -280,28 +280,28 @@ slaveof <masterip> <masterport>  #绑定master的IP跟端口
   slave-serve-stale-data no
   ```
 
-You can configure a slave instance to accept writes or not. Writing against
-a slave instance may be useful to store some ephemeral data (because data
-written on a slave will be easily deleted after resync with the master) but
-may also cause problems if clients are writing to it because of a
-misconfiguration.
 
-Since Redis 2.6 by default slaves are read-only.
+- ### **slave-read-only**
+  配置slave 是否为只读，没见过配置slave为可写入的
+    ```properties
+  slave-read-only yes    #默认只读
+  ```
+  
+- ### **repl-diskless-sync**
+  配置主从同步时是否使用无盘复制
 
-Note: read only slaves are not designed to be exposed to untrusted clients
-on the internet. It's just a protection layer against misuse of the instance.
-Still a read only slave exports by default all the administrative commands
-such as CONFIG, DEBUG, and so forth. To a limited extent you can improve
-security of read only slaves using 'rename-command' to shadow all the
-administrative / dangerous commands.
-slave-read-only yes
+  当新建master-slave的关系或者重连时无法进行增量同步时(backlog找不到对应地offset)，需要进行一个”full-synchronization“全量同步，
+  这个时候需要将dump.rdb文件从 master同步到slave,全量同步有两种方式：
+  
+  1)磁盘复制  master在接受到slave请求后会fork一个子进程，基于当前内存中已有的数据，创建一份最新的RDB文件写入磁盘，
+  稍后(repl-diskless-sync-delay 规定时延收集其他需要同步的slave请求)主线程将rdb文件发送给slaves
+  
+  2)无盘复制 主线程直接在内存中生成一个rdb文件然后传输给slaves
+  
+    ```properties
+  repl-diskless-sync no    #默认磁盘复制
+  ```
 
-Replication SYNC strategy: disk or socket.
-
--------------------------------------------------------
-
-WARNING: DISKLESS REPLICATION IS EXPERIMENTAL CURRENTLY
--------------------------------------------------------
 
 New slaves and reconnecting slaves that are not able to continue the replication
 process just receiving differences, need to do what is called a "full
