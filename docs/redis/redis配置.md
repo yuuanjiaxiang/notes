@@ -200,6 +200,8 @@ tcp-keepalive 60
 
 RDB模式
 
+[RDB如何应对快照过程中数据变更：写时复制](https://www.cnblogs.com/Courage129/p/14343136.html)	
+
 - ### **save**
 
   `save <seconds> <changes>`
@@ -210,9 +212,9 @@ RDB模式
 
   ```properties
   save ""    			#清空之前所有保存配置
-  save 900 1   
+  save 900 1
   save 300 10
-  save 60 10000   
+  save 60 10000
   ```
 
 - ### **stop-writes-on-bgsave-error**
@@ -232,7 +234,7 @@ RDB模式
   不使用的话则生成的rdb文件会比较大
     ```properties
   rdbcompression  yes     #默认开启
-  ```
+    ```
 
 - ### **rdbchecksum**
   从RDB 5开始，会在结尾使用CRC64计算校验和，大概耗费10%的性能
@@ -240,19 +242,19 @@ RDB模式
   关闭的话会结尾校验和置为0
     ```properties
   rdbchecksum  yes     #默认开启
-  ```
+    ```
 
 - ### **dbfilename**
   rdb保存文件名
     ```properties
   dbfilename dump.rdb     #默认名称
-  ```
+    ```
 
 - ### **dir**
   rdb保存工作路径
     ```properties
   dir ./     #默认路径
-  ```
+    ```
 
 ## REPLICATION主从复制
 
@@ -260,13 +262,13 @@ RDB模式
 
 ```properties
 slaveof <masterip> <masterport>  #绑定master的IP跟端口
-  ```
+```
 
 - ### **masterauth**
   如果master使用requirepass进行了密码保护，则需要配置密码，否则master会拒接slave请求
     ```properties
   masterauth <master-password>     #默认路径
-  ```
+    ```
 
 
 - ### **slave-serve-stale-data**
@@ -278,14 +280,14 @@ slaveof <masterip> <masterport>  #绑定master的IP跟端口
 
   #关闭的时候，会统一按照SYNC with master in progress回复请求
   slave-serve-stale-data no
-  ```
+    ```
 
 
 - ### **slave-read-only**
   配置slave 是否为只读，没见过配置slave为可写入的
     ```properties
   slave-read-only yes    #默认只读
-  ```
+    ```
   
 - ### **repl-diskless-sync**
   配置主从同步时是否使用无盘复制
@@ -294,69 +296,45 @@ slaveof <masterip> <masterport>  #绑定master的IP跟端口
   这个时候需要将dump.rdb文件从 master同步到slave,全量同步有两种方式：
   
   1)磁盘复制  master在接受到slave请求后会fork一个子进程，基于当前内存中已有的数据，创建一份最新的RDB文件写入磁盘，
-  稍后(repl-diskless-sync-delay 规定时延收集其他需要同步的slave请求)主线程将rdb文件发送给slaves
+  稍后(repl-diskless-sync-delay 规定时延收集其他需要同步的slave请求)主线程将rdb文件发送给所有的slaves
   
-  2)无盘复制 主线程直接在内存中生成一个rdb文件然后传输给slaves
+  2)无盘复制 主线程直接在内存中生成一个rdb文件然后传输给slave，如果有新的slave需要rdb文件，会在当前线程完成后再重新进行；master可以配置开始快照传输前的等待延迟，来时多个slave并行
+  
+  无盘复制主要用在磁盘速度慢而网络传输速度快的情况
   
     ```properties
   repl-diskless-sync no    #默认磁盘复制
-  ```
+    ```
+  
+- ### **repl-diskless-sync-delay**
+  无盘复制情况下，配置时延，等待是否有其他slave一起参与传输
+  
+  单位为秒
+    ```properties
+  repl-diskless-sync-delay 5    #默认时延为5s
+  repl-diskless-sync-delay 0    #时延为0表示立即开始
+    ```
 
+- ### **repl-ping-slave-period**
+  从节点定时向主节点发送ping(心跳检测)，单位为秒
+    ```properties
+  repl-ping-slave-period 10    #默认10秒
+    ```
 
-New slaves and reconnecting slaves that are not able to continue the replication
-process just receiving differences, need to do what is called a "full
-synchronization". An RDB file is transmitted from the master to the slaves.
-The transmission can happen in two different ways:
-
-1) Disk-backed: The Redis master creates a new process that writes the RDB
-   file on disk. Later the file is transferred by the parent
-   process to the slaves incrementally.
-2) Diskless: The Redis master creates a new process that directly writes the
-   RDB file to slave sockets, without touching the disk at all.
-
-With disk-backed replication, while the RDB file is generated, more slaves
-can be queued and served with the RDB file as soon as the current child producing
-the RDB file finishes its work. With diskless replication instead once
-the transfer starts, new slaves arriving will be queued and a new transfer
-will start when the current one terminates.
-
-When diskless replication is used, the master waits a configurable amount of
-time (in seconds) before starting the transfer in the hope that multiple slaves
-will arrive and the transfer can be parallelized.
-
-With slow disks and fast (large bandwidth) networks, diskless replication
-works better.
-repl-diskless-sync no
-
-When diskless replication is enabled, it is possible to configure the delay
-the server waits in order to spawn the child that transfers the RDB via socket
-to the slaves.
-
-This is important since once the transfer starts, it is not possible to serve
-new slaves arriving, that will be queued for the next RDB transfer, so the server
-waits a delay in order to let more slaves arrive.
-
-The delay is specified in seconds, and by default is 5 seconds. To disable
-it entirely just set it to 0 seconds and the transfer will start ASAP.
-repl-diskless-sync-delay 5
-
-Slaves send PINGs to server in a predefined interval. It's possible to change
-this interval with the repl_ping_slave_period option. The default value is 10
-seconds.
-
-repl-ping-slave-period 10
-
-The following option sets the replication timeout for:
-
-1) Bulk transfer I/O during SYNC, from the point of view of slave.
-2) Master timeout from the point of view of slaves (data, pings).
-3) Slave timeout from the point of view of masters (REPLCONF ACK pings).
-
-It is important to make sure that this value is greater than the value
-specified for repl-ping-slave-period otherwise a timeout will be detected
-every time there is low traffic between the master and the slave.
-
-repl-timeout 60
+- ### **repl-timeout**
+  三种情况认为复制超时：
+  1）slave角度，如果在repl-timeout时间内没有收到master SYNC传输的rdb snapshot数据，
+  
+  2）slave角度，在repl-timeout没有收到master发送的数据包或者ping。
+  
+  3）master角度，在repl-timeout时间没有收到REPCONF ACK确认信息。
+  
+  当redis检测到repl-timeout超时(默认值60s)，将会关闭主从之间的连接,redis slave发起重新建立主从连接的请求。
+  
+  对于内存数据集比较大的系统，可以增大repl-timeout参数。
+    ```properties
+  repl-timeout 60    #默认60秒
+    ```
 
 Disable TCP_NODELAY on the slave socket after SYNC?
 
