@@ -3,15 +3,20 @@
 不区分大小写
 
 1k => 1000 bytes
+
 1kb => 1024 bytes
+
 1m => 1000000 bytes
+
 1mb => 1024*1024 bytes
+
 1g => 1000000000 bytes
+
 1gb => 1024*1024*1024 bytes
 
 
 
-## include导入
+## include 导入
 
 - ### **include**
 
@@ -27,7 +32,7 @@ include c:\path\to\other.conf
 
 
 
-## network网络
+## network 网络
 
 - ### **bind**
 
@@ -111,7 +116,7 @@ tcp-keepalive 0 #0表示关闭
 tcp-keepalive 60
 ```
 
-##  GENERAL通用配置
+##  GENERAL 通用配置
 
 - ### **daemonize**
 
@@ -138,7 +143,7 @@ tcp-keepalive 60
 
 
 
-- ## supervised
+- ### supervised
 
   可以通过upstart和systemd管理Redis守护进程，这个参数是和具体的操作系统相关的。
 
@@ -196,7 +201,7 @@ tcp-keepalive 60
   databases 16    #数据库序号为0-15
   ```
 
-## SNAPSHOTTING快照持久化
+## SNAPSHOTTING 快照持久化
 
 RDB模式
 
@@ -256,7 +261,7 @@ RDB模式
   dir ./     #默认路径
     ```
 
-## REPLICATION主从复制
+## REPLICATION 主从复制
 
 主从复制细节这里就不展开了，只看配置
 
@@ -336,328 +341,201 @@ slaveof <masterip> <masterport>  #绑定master的IP跟端口
   repl-timeout 60    #默认60秒
     ```
 
-Disable TCP_NODELAY on the slave socket after SYNC?
+- ### **repl-disable-tcp-nodelay**
+  [Nagle算法，TCP_NODELAY](https://en.wikipedia.org/wiki/Nagle's_algorithm)
+
+  简单的来说如果开启，redis会用更少的数据包来向slave发送数据，同时用到的带宽也更小，但是会增加大约40ms的延迟
+  
+  Nagle算法的提出本质是为了在网络条件不好的情况下通过网络发送的数据包数量来提高TCP/IP网络效率的方法，如果是在网络条件不好，或者主备节点很多，主备网络间链路很长的情况下，开启这个算法也是行之有效的；
+    ```properties
+  repl-disable-tcp-nodelay no    #默认关闭
+    ```
+
+- ### **repl-ping-slave-period**
+  设置复制积压大小。 积压是一个积累的缓冲区从机断开一段时间后的从机数据，
+  这样当一个从机想再次重新连接，通常不需要完全重新同步，而是部分重新同步
+  就足够了，只需传递从服务器断开连接后丢失的数据部分。 
+  
+  缓存积压区越大，就可以容忍slave断线更长时间，这样slave一恢复链接就可以开始部分同步操作
+  ```properties
+  repl-backlog-size 1mb    #默认1mb
+  ```
+
+- ### **repl-ping-slave-period**
+  backlog是在master有slave链接的时候才会生成，同样的，如果所有的slave都断开链接并且长时间没有重新链接，
+  那么backlog就会清空，这个参数就标识的最后一个salve断开链接后backlog仍然存活的时间Time to Live
+  ```properties
+  repl-backlog-ttl 3600    #默认3600S
+  ```
+
+- ### **slave-priority**
+  slave-priority是个整数，当哨兵选举master的时候，越小的priority越会被选举;
+  但是0表示不会被选举
+  ```properties
+  slave-priority 100    #默认100
+  slave-priority 0      #0表示不会选举为master
+  ```
+
+- ### **min-slaves-xxx**
+  当slave连接到master,且延迟<=M的数量少于N的时候，master可以拒绝写入
+  
+  延迟指的是从slave发送到master的ping时间(其实就是心跳机制) 如果配置了min-slaves-to-write，健康的slave的个数小于配置项N，mater就禁止写入。
+
+  这个配置虽然不能保证N个slave都一定能接收到master的写操作，但是能避免没有足够健康的slave的时候，master不能写入来避免数据丢失 。
+  
+  设置为0关闭该功能。
+  
+  ```properties
+  min-slaves-to-write 3  #最少有3个slave的延迟小于10才写入
+  min-slaves-max-lag 10
+  ```
+
+## SECURITY 安全
+
+  客户端在处理其他任何请求前，需要发出`AUTH <password>`命令，这在信任域可以被其他人访问时是有用的，但是一般
+  并不用，因为大部分redis服务都是部署在自己服务器上
+  由于redis每秒可以处理150K个请求，所以密码要足够强
+
+  ```properties
+  requirepass foobared
+  ```
+
+可以在共享环境中更改危险命令的名称。例如，CONFIG命令可能会被重命名为一些难以猜测的内容，以便它仍然可以用于内部使用的工具，但不能用于一般客户机。
+也可以通过将命令重命名为空字符串来完全终止命令
+  ```properties
+    rename-command CONFIG b840fc02d524045429941cc15f59e41cb7be6c52+
+    rename-command CONFIG ""
+  ```
+
+##LIMITS 客户端限制
+设置同时连接的客户端最大数量，默认是10000台，
+当达到最大连接数时会关闭新链接，返回`max number of clients reached`.
+  ```properties
+    maxclients 10000
+  ```
+
+##MEMORY MANAGEMENT 内存管理
+
+###persistence-available
+如果redis仅作为内存中的缓存而不进行任何持久化(AOF/RDB)，那么fork()子进程就没什么必要了,同时会禁用fork()操作的命令BGSAVE 和 BGREWRITEAOF。
+  ```properties
+    persistence-available [(yes)|no]
+  ```
+
+###maxmemory
+设置内存最大字节数，如果达到内存限制时，redis会按照`maxmemory-policy`指定的策略来删除键值对，如果无法删除来减小内存，
+redis会正常回复只读命令get等，但是对set,lpush等命令会报错；
+
+  ```properties
+    maxmemory <bytes>
+  ```
+###maxmemory-policy
+到达最大内存时的删除策略
+  ```properties
+  volatile-lru  ->对"过期集合"中的数据采取LRU(近期最少使用)算法.如果对key使用"expire"指令指定了过期时间,那么此key将会被添加到"过期集合"中。将已经过期/LRU的数据优先移除.如果"过期集合"中全部移除仍不能满足内存需求,将OOM.
+  allkeys-lru ->对所有的数据,采用LRU算法
+  volatile-random ->对"过期集合"中的数据采取"随即选取"算法,并移除选中的K-V,直到"内存足够"为止. 如果如果"过期集合"中全部移除全部移除仍不能满足,将OOM
+  allkeys-random ->对所有的数据,采取"随机选取"算法,并移除选中的K-V,直到"内存足够"为止
+  volatile-ttl ->对"过期集合"中的数据采取TTL算法(最小存活时间),移除即将过期的数据.
+  noeviction ->不做任何干扰操作,直接返回OOM异常
+
+  maxmemory-policy noeviction #默认策略
+
+  使用以下任何命令时，只要没有合适的键删除则报错: set setnx setex append \
+  incr decr rpush lpush rpushx lpushx linsert lset rpoplpush sadd\
+  sinter sinterstore sunion sunionstore sdiff sdiffstore zadd zincrby\
+  zunionstore zinterstore hset hsetnx hmset hincrby incrby decrby\
+  getset mset msetnx exec sort
 
-If you select "yes" Redis will use a smaller number of TCP packets and
-less bandwidth to send data to slaves. But this can add a delay for
-the data to appear on the slave side, up to 40 milliseconds with
-Linux kernels using a default configuration.
+  ```
 
-If you select "no" the delay for data to appear on the slave side will
-be reduced but more bandwidth will be used for replication.
+###maxmemory-samples
+LRU算法和LLT算法并不是精确的，而是为了节省内存使用的近似算法，每次选取一个样本集合来做。
+通过这个配置可以更改每个样本集合的大小；
 
-By default we optimize for low latency, but in very high traffic conditions
-or when the master and slaves are many hops away, turning this to "yes" may
-be a good idea.
-repl-disable-tcp-nodelay no
+如果样本大则更耗费CPU资源但是更精确，样本小则更快，但是准确性差
 
-Set the replication backlog size. The backlog is a buffer that accumulates
-slave data when slaves are disconnected for some time, so that when a slave
-wants to reconnect again, often a full resync is not needed, but a partial
-resync is enough, just passing the portion of data the slave missed while
-disconnected.
+  ```properties
+  maxmemory-samples 5
+  ```
 
-The bigger the replication backlog, the longer the time the slave can be
-disconnected and later be able to perform a partial resynchronization.
+## 追加模式 AOF配置
 
-The backlog is only allocated once there is at least a slave connected.
+AOF跟RDB具体的区别不做展开，只用知道如果AOF与RDB同时开启是没问题的，系统会优先加载AOF文件来保证更好的耐用性
 
-repl-backlog-size 1mb
+###appendonly
+是否打开AOF配置
+  ```properties
+  appendonly no  #默认关闭
+  ```
 
-After a master has no longer connected slaves for some time, the backlog
-will be freed. The following option configures the amount of seconds that
-need to elapse, starting from the time the last slave disconnected, for
-the backlog buffer to be freed.
+###appendfilename
+生成的AOF文件名，默认为`appendonly.aof`
+  ```properties
+  appendfilename "appendonly.aof"  #AOF文件名，默认值
+  ```
 
-A value of 0 means to never release the backlog.
+###appendfsync
+`fsync()`命令通知操作系统把数据写入磁盘而不是写入缓存区；某些操作系统会立即刷新数据到磁盘，有些操作系统只是尽快尝试去做这件事
 
-repl-backlog-ttl 3600
+redis的appendfsync命令指定提供了三种不同的模式：
 
-The slave priority is an integer number published by Redis in the INFO output.
-It is used by Redis Sentinel in order to select a slave to promote into a
-master if the master is no longer working correctly.
+`no`: 从来不主动调用`fsync()`，而是等操作系统自己调用，是最快的.
 
-A slave with a low priority number is considered better for promotion, so
-for instance if there are three slaves with priority 10, 100, 25 Sentinel will
-pick the one with priority 10, that is the lowest.
+`always`: 每条写命令都会调用`fsync()`存入磁盘，虽然慢但是最安全.
 
-However a special priority of 0 marks the slave as not able to perform the
-role of master, so a slave with priority of 0 will never be selected by
-Redis Sentinel for promotion.
+`everysec`: 每秒调用一次`fsync()`，折中的方案，最坏情况下只会丢失1s的数据.
+```properties
+  appendfsync always
+  appendfsync everysec  #默认配置
+  appendfsync no
+```
 
-By default the priority is 100.
-slave-priority 100
+###no-appendfsync-on-rewrite
+bgrewriteaof机制，在一个子进程中进行aof的重写，从而不阻塞主进程对其余命令的处理，同时解决了aof文件过大问题。
 
-It is possible for a master to stop accepting writes if there are less than
-N slaves connected, having a lag less or equal than M seconds.
+现在问题出现了，同时在执行bgrewriteaof操作和主进程写aof文件的操作，两者都会操作磁盘，而bgrewriteaof往往会涉及大量磁盘操作，这样就会造成主进程在写aof文件的时候出现阻塞的情形，现在no-appendfsync-on-rewrite参数出场了。如果该参数设置为no，是最安全的方式，不会丢失数据，但是要忍受阻塞的问题。如果设置为yes呢？这就相当于将appendfsync设置为no，这说明并没有执行磁盘操作，只是写入了缓冲区，因此这样并不会造成阻塞（因为没有竞争磁盘），但是如果这个时候redis挂掉，就会丢失数据。丢失多少数据呢？在linux的操作系统的默认设置下，最多会丢失30s的数据。
 
-The N slaves need to be in "online" state.
+因此，如果应用系统无法忍受延迟，而可以容忍少量的数据丢失，则设置为yes。如果应用系统无法忍受数据丢失，则设置为no。
+```properties
+  no-appendfsync-on-rewrite no
+```
 
-The lag in seconds, that must be <= the specified value, is calculated from
-the last ping received from the slave, that is usually sent every second.
+###auto-aof-rewrite
+Redis可以自动重写AOF文件，或者使用命令`Bgrewriteaof `手动触发
 
-This option does not GUARANTEE that N replicas will accept the write, but
-will limit the window of exposure for lost writes in case not enough slaves
-are available, to the specified number of seconds.
+当redis最后一次重写AOF文件时(如果是刚开始没有触发重写，那就使用AOF文件初始大小)，会记录下这个文件的大小，
+重写发生后会用当前AOF文件大小与记录的大小做比较：
 
-For example to require at least 3 slaves with a lag <= 10 seconds use:
+1)增量大小超过了记录大小的预设百分比，触发重写；**为0则表示关闭重写功能**
 
-min-slaves-to-write 3
-min-slaves-max-lag 10
+2)指定重写的最小文件大小，不满足则不触发重写，避免频繁重写耗费性能
 
-Setting one or the other to 0 disables the feature.
+```properties
+auto-aof-rewrite-percentage 100   #触发重写的百分比
+auto-aof-rewrite-min-size 64mb    #最小重写文件大小
+```
 
-By default min-slaves-to-write is set to 0 (feature disabled) and
-min-slaves-max-lag is set to 10.
+###aof-load-truncated
+在启动Redis进程的时候，加载AOF文件到内存过程中，可能会发现AOF文件末尾被截断了，尤其是Redis进程异常崩溃后(特别是在不使用 data=ordered 选项挂载ext4文件系统时。但是Redis本身崩溃而操作系统正常运行则不会出现该情况)；
 
-SECURITY
+可以使用这个配置来选择抛出异常退出或者尽可能多的加载数据(默认配置)
 
-Require clients to issue AUTH <PASSWORD> before processing any other
-commands.  This might be useful in environments in which you do not trust
-others with access to the host running redis-server.
+yes ：末尾被截断的 AOF 文件将会被加载，并打印日志通知用户。
 
-This should stay commented out for backward compatibility and because most
-people do not need auth (e.g. they run their own servers).
+no ：服务器将报错并拒绝启动。
 
-Warning: since Redis is pretty fast an outside user can try up to
-150k passwords per second against a good box. This means that you should
-use a very strong password otherwise it will be very easy to break.
+这时用户需要使用redis-check-aof 工具修复AOF文件，再重新启动。
+```properties
+  aof-load-truncated yes
+```
 
-requirepass foobared
-
-Command renaming.
-
-It is possible to change the name of dangerous commands in a shared
-environment. For instance the CONFIG command may be renamed into something
-hard to guess so that it will still be available for internal-use tools
-but not available for general clients.
-
-Example:
-
-rename-command CONFIG b840fc02d524045429941cc15f59e41cb7be6c52
-
-It is also possible to completely kill a command by renaming it into
-an empty string:
-
-rename-command CONFIG ""
-
-Please note that changing the name of commands that are logged into the
-AOF file or transmitted to slaves may cause problems.
-
-LIMITS
-
-Set the max number of connected clients at the same time. By default
-this limit is set to 10000 clients, however if the Redis server is not
-able to configure the process file limit to allow for the specified limit
-the max number of allowed clients is set to the current file limit
-minus 32 (as Redis reserves a few file descriptors for internal uses).
-
-Once the limit is reached Redis will close all the new connections sending
-an error 'max number of clients reached'.
-
-maxclients 10000
-
-If Redis is to be used as an in-memory-only cache without any kind of
-persistence, then the fork() mechanism used by the background AOF/RDB
-persistence is unnecessary. As an optimization, all persistence can be
-turned off in the Windows version of Redis. This will redirect heap
-allocations to the system heap allocator, and disable commands that would
-otherwise cause fork() operations: BGSAVE and BGREWRITEAOF.
-This flag may not be combined with any of the other flags that configure
-AOF and RDB operations.
-persistence-available [(yes)|no]
-
-Don't use more memory than the specified amount of bytes.
-When the memory limit is reached Redis will try to remove keys
-according to the eviction policy selected (see maxmemory-policy).
-
-If Redis can't remove keys according to the policy, or if the policy is
-set to 'noeviction', Redis will start to reply with errors to commands
-that would use more memory, like SET, LPUSH, and so on, and will continue
-to reply to read-only commands like GET.
-
-This option is usually useful when using Redis as an LRU cache, or to set
-a hard memory limit for an instance (using the 'noeviction' policy).
-
-WARNING: If you have slaves attached to an instance with maxmemory on,
-the size of the output buffers needed to feed the slaves are subtracted
-from the used memory count, so that network problems / resyncs will
-not trigger a loop where keys are evicted, and in turn the output
-buffer of slaves is full with DELs of keys evicted triggering the deletion
-of more keys, and so forth until the database is completely emptied.
-
-In short... if you have slaves attached it is suggested that you set a lower
-limit for maxmemory so that there is some free RAM on the system for slave
-output buffers (but this is not needed if the policy is 'noeviction').
-
-WARNING: not setting maxmemory will cause Redis to terminate with an
-out-of-memory exception if the heap limit is reached.
-
-NOTE: since Redis uses the system paging file to allocate the heap memory,
-the Working Set memory usage showed by the Windows Task Manager or by other
-tools such as ProcessExplorer will not always be accurate. For example, right
-after a background save of the RDB or the AOF files, the working set value
-may drop significantly. In order to check the correct amount of memory used
-by the redis-server to store the data, use the INFO client command. The INFO
-command shows only the memory used to store the redis data, not the extra
-memory used by the Windows process for its own requirements. Th3 extra amount
-of memory not reported by the INFO command can be calculated subtracting the
-Peak Working Set reported by the Windows Task Manager and the used_memory_peak
-reported by the INFO command.
-
-maxmemory <bytes>
-
-MAXMEMORY POLICY: how Redis will select what to remove when maxmemory
-is reached. You can select among five behaviors:
-
-volatile-lru -> remove the key with an expire set using an LRU algorithm
-allkeys-lru -> remove any key according to the LRU algorithm
-volatile-random -> remove a random key with an expire set
-allkeys-random -> remove a random key, any key
-volatile-ttl -> remove the key with the nearest expire time (minor TTL)
-noeviction -> don't expire at all, just return an error on write operations
-
-Note: with any of the above policies, Redis will return an error on write
-operations, when there are no suitable keys for eviction.
-
-       At the date of writing these commands are: set setnx setex append
-       incr decr rpush lpush rpushx lpushx linsert lset rpoplpush sadd
-       sinter sinterstore sunion sunionstore sdiff sdiffstore zadd zincrby
-       zunionstore zinterstore hset hsetnx hmset hincrby incrby decrby
-       getset mset msetnx exec sort
-
-The default is:
-
-maxmemory-policy noeviction
-
-LRU and minimal TTL algorithms are not precise algorithms but approximated
-algorithms (in order to save memory), so you can tune it for speed or
-accuracy. For default Redis will check five keys and pick the one that was
-used less recently, you can change the sample size using the following
-configuration directive.
-
-The default of 5 produces good enough results. 10 Approximates very closely
-true LRU but costs a bit more CPU. 3 is very fast but not very accurate.
-
-maxmemory-samples 5
-
-APPEND ONLY MODE
-
-By default Redis asynchronously dumps the dataset on disk. This mode is
-good enough in many applications, but an issue with the Redis process or
-a power outage may result into a few minutes of writes lost (depending on
-the configured save points).
-
-The Append Only File is an alternative persistence mode that provides
-much better durability. For instance using the default data fsync policy
-(see later in the config file) Redis can lose just one second of writes in a
-dramatic event like a server power outage, or a single write if something
-wrong with the Redis process itself happens, but the operating system is
-still running correctly.
-
-AOF and RDB persistence can be enabled at the same time without problems.
-If the AOF is enabled on startup Redis will load the AOF, that is the file
-with the better durability guarantees.
-
-Please check http://redis.io/topics/persistence for more information.
-
-appendonly no
-
-The name of the append only file (default: "appendonly.aof")
-appendfilename "appendonly.aof"
-
-The fsync() call tells the Operating System to actually write data on disk
-instead of waiting for more data in the output buffer. Some OS will really flush
-data on disk, some other OS will just try to do it ASAP.
-
-Redis supports three different modes:
-
-no: don't fsync, just let the OS flush the data when it wants. Faster.
-always: fsync after every write to the append only log. Slow, Safest.
-everysec: fsync only one time every second. Compromise.
-
-The default is "everysec", as that's usually the right compromise between
-speed and data safety. It's up to you to understand if you can relax this to
-"no" that will let the operating system flush the output buffer when
-it wants, for better performances (but if you can live with the idea of
-some data loss consider the default persistence mode that's snapshotting),
-or on the contrary, use "always" that's very slow but a bit safer than
-everysec.
-
-More details please check the following article:
-http://antirez.com/post/redis-persistence-demystified.html
-
-If unsure, use "everysec".
-
-appendfsync always
-appendfsync everysec
-appendfsync no
-
-When the AOF fsync policy is set to always or everysec, and a background
-saving process (a background save or AOF log background rewriting) is
-performing a lot of I/O against the disk, in some Linux configurations
-Redis may block too long on the fsync() call. Note that there is no fix for
-this currently, as even performing fsync in a different thread will block
-our synchronous write(2) call.
-
-In order to mitigate this problem it's possible to use the following option
-that will prevent fsync() from being called in the main process while a
-BGSAVE or BGREWRITEAOF is in progress.
-
-This means that while another child is saving, the durability of Redis is
-the same as "appendfsync none". In practical terms, this means that it is
-possible to lose up to 30 seconds of log in the worst scenario (with the
-default Linux settings).
-
-If you have latency problems turn this to "yes". Otherwise leave it as
-"no" that is the safest pick from the point of view of durability.
-no-appendfsync-on-rewrite no
-
-Automatic rewrite of the append only file.
-Redis is able to automatically rewrite the log file implicitly calling
-BGREWRITEAOF when the AOF log size grows by the specified percentage.
-
-This is how it works: Redis remembers the size of the AOF file after the
-latest rewrite (if no rewrite has happened since the restart, the size of
-the AOF at startup is used).
-
-This base size is compared to the current size. If the current size is
-bigger than the specified percentage, the rewrite is triggered. Also
-you need to specify a minimal size for the AOF file to be rewritten, this
-is useful to avoid rewriting the AOF file even if the percentage increase
-is reached but it is still pretty small.
-
-Specify a percentage of zero in order to disable the automatic AOF
-rewrite feature.
-
-auto-aof-rewrite-percentage 100
-auto-aof-rewrite-min-size 64mb
-
-An AOF file may be found to be truncated at the end during the Redis
-startup process, when the AOF data gets loaded back into memory.
-This may happen when the system where Redis is running
-crashes, especially when an ext4 filesystem is mounted without the
-data=ordered option (however this can't happen when Redis itself
-crashes or aborts but the operating system still works correctly).
-
-Redis can either exit with an error when this happens, or load as much
-data as possible (the default now) and start if the AOF file is found
-to be truncated at the end. The following option controls this behavior.
-
-If aof-load-truncated is set to yes, a truncated AOF file is loaded and
-the Redis server starts emitting a log to inform the user of the event.
-Otherwise if the option is set to no, the server aborts with an error
-and refuses to start. When the option is set to no, the user requires
-to fix the AOF file using the "redis-check-aof" utility before to restart
-the server.
-
-Note that if the AOF file will be found to be corrupted in the middle
-the server will still exit with an error. This option only applies when
-Redis will try to read more data from the AOF file but not enough bytes
-will be found.
-aof-load-truncated yes
-
-LUA SCRIPTING
+###aof-use-rdb-preamble
+开启AOF-RDB混合持久化，生成的AOF文件前半段是RDB格式的全量数据后半段是AOF格式的增量数据
+  ```properties
+  aof-use-rdb-preamble yes
+  ```
+##LUA 脚本
 
 Max execution time of a Lua script in milliseconds.
 
