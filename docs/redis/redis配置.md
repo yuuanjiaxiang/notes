@@ -536,24 +536,24 @@ no ：服务器将报错并拒绝启动。
   aof-use-rdb-preamble yes
   ```
 ##LUA 脚本
+###lua-time-limit
 
-Max execution time of a Lua script in milliseconds.
+LUA脚本的最大执行时间，单位为毫秒
 
-If the maximum execution time is reached Redis will log that a script is
-still in execution after the maximum allowed time and will start to
-reply to queries with an error.
+当脚本运行时间超过这一限制后，Redis 将开始接受其他命令但不会执行（以确保脚本的原子性，因为此时脚本并没有被终止），而是会返回“BUSY”错误。
 
-When a long running script exceeds the maximum execution time only the
-SCRIPT KILL and SHUTDOWN NOSAVE commands are available. The first can be
-used to stop a script that did not yet called write commands. The second
-is the only way to shut down the server in the case a write command was
-already issued by the script but the user doesn't want to wait for the natural
-termination of the script.
+Redis 提供了一个script kill 的命令来中止脚本的执行
 
-Set it to 0 or a negative value for unlimited execution without warnings.
-lua-time-limit 5000
+如果当前执行的Lua 脚本对Redis 的数据进行了修改（SET、DEL 等），那么通过script kill 命令是不能终止脚本运行的。
+遇到这种情况，只能通过shutdown nosave 命令来强行终止redis。shutdown nosave 和shutdown 的区别在于shutdown nosave 不会进行持久化操作，意味着发生在上一次快照后的数据库修改都会丢失。
 
-REDIS CLUSTER
+设置为0或负值将会以无报错的情况进行无限制执行。
+
+```properties
+  lua-time-limit 5000
+  ```
+
+##REDIS CLUSTER 集群
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -899,13 +899,3 @@ the file will be fsync-ed every 32 MB of data generated. This is useful
 in order to commit the file to the disk more incrementally and avoid
 big latency spikes.
 aof-rewrite-incremental-fsync yes
-
-INCLUDES
-
-Include one or more other config files here.  This is useful if you
-have a standard template that goes to all Redis server but also need
-to customize a few per-server settings.  Include files can include
-other files, so use this wisely.
-
-include /path/to/local.conf
-include /path/to/other.conf
