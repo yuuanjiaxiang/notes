@@ -555,36 +555,29 @@ Redis 提供了一个script kill 的命令来中止脚本的执行
 
 ##REDIS CLUSTER 集群
 
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+一般的Redis实例不能作为集群的节点，只有配置了`cluster-enabled`才能作为集群的节点
+  ```properties
+  cluster-enabled yes
+  ```
 
-WARNING EXPERIMENTAL: Redis Cluster is considered to be stable code, however
-in order to mark it as "mature" we need to wait for a non trivial percentage
-of users to deploy it in production.
-
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-Normal Redis instances can't be part of a Redis Cluster; only nodes that are
-started as cluster nodes can. In order to start a Redis instance as a
-cluster node enable the cluster support uncommenting the following:
-
-cluster-enabled yes
-
-Every cluster node has a cluster configuration file. This file is not
-intended to be edited by hand. It is created and updated by Redis nodes.
-Every Redis Cluster node requires a different cluster configuration file.
-Make sure that instances running in the same system do not have
-overlapping cluster configuration file names.
-
+集群的每个节点都有一个配置文件，是不允许手动编辑的；配置文件是由Redis节点创建和更新的，要确保同一集群中
+的每个节点实例配置文件名都不重复
+  ```properties
 cluster-config-file nodes-6379.conf
+  ```
 
-Cluster node timeout is the amount of milliseconds a node must be unreachable
-for it to be considered in failure state.
-Most other internal time limits are multiple of the node timeout.
-
+集群节点的超时时间是以毫秒为单位的，许多内部的时间限制是超时时间的倍数
+ ```properties
 cluster-node-timeout 15000
+  ```
 
-A slave of a failing master will avoid to start a failover if its data
-looks too old.
+如果主节点失败了，从节点会避免故障转移，如果数据太旧
+
+数据太旧的定义是执行如下两个检查：
+
+1)如果有多个从节点可以实现故障转移，从节点们会互相通信，根据offset提供最新的从节点
+
+2)每个从节点都计算上次与Master进行通信的时间(ping,Master命令下发，断开链接等)，如果上次通信时间太久的话就不考虑在当前从节点进行故障转移;
 
 There is no simple way for a slave to actually have a exact measure of
 its "data age", so the following two checks are performed:
