@@ -551,7 +551,7 @@ Redis 提供了一个script kill 的命令来中止脚本的执行
 
 ```properties
   lua-time-limit 5000
-  ```
+```
 
 ##REDIS CLUSTER 集群
 
@@ -562,6 +562,7 @@ Redis 提供了一个script kill 的命令来中止脚本的执行
 
 集群的每个节点都有一个配置文件，是不允许手动编辑的；配置文件是由Redis节点创建和更新的，要确保同一集群中
 的每个节点实例配置文件名都不重复
+
   ```properties
 cluster-config-file nodes-6379.conf
   ```
@@ -569,9 +570,9 @@ cluster-config-file nodes-6379.conf
 集群节点的超时时间是以毫秒为单位的，许多内部的时间限制是超时时间的倍数
  ```properties
 cluster-node-timeout 15000
-  ```
+ ```
 
-如果主节点失败了，从节点会避免故障转移，如果数据太旧
+如果主节点失败了，但是从节点数据太旧，从节点会避免故障转移，
 
 数据太旧的定义是执行如下两个检查：
 
@@ -579,52 +580,19 @@ cluster-node-timeout 15000
 
 2)每个从节点都计算上次与Master进行通信的时间(ping,Master命令下发，断开链接等)，如果上次通信时间太久的话就不考虑在当前从节点进行故障转移;
 
-There is no simple way for a slave to actually have a exact measure of
-its "data age", so the following two checks are performed:
+第二点的超时时间用户可以自己设置，这个超时时间为：
 
-1) If there are multiple slaves able to failover, they exchange messages
-   in order to try to give an advantage to the slave with the best
-   replication offset (more data from the master processed).
-   Slaves will try to get their rank by offset, and apply to the start
-   of the failover a delay proportional to their rank.
+`(node-timeout * slave-validity-factor) + repl-ping-slave-period`
 
-2) Every single slave computes the time of the last interaction with
-   its master. This can be the last ping or command received (if the master
-   is still in the "connected" state), or the time that elapsed since the
-   disconnection with the master (if the replication link is currently down).
-   If the last interaction is too old, the slave will not try to failover
-   at all.
-
-The point "2" can be tuned by user. Specifically a slave will not perform
-the failover if, since the last interaction with the master, the time
-elapsed is greater than:
-
-(node-timeout * slave-validity-factor) + repl-ping-slave-period
-
-So for example if node-timeout is 30 seconds, and the slave-validity-factor
-is 10, and assuming a default repl-ping-slave-period of 10 seconds, the
-slave will not try to failover if it was not able to talk with the master
-for longer than 310 seconds.
-
-A large slave-validity-factor may allow slaves with too old data to failover
-a master, while a too small value may prevent the cluster from being able to
-elect a slave at all.
-
-For maximum availability, it is possible to set the slave-validity-factor
-to a value of 0, which means, that slaves will always try to failover the
-master regardless of the last time they interacted with the master.
-(However they'll always try to apply a delay proportional to their
-offset rank).
-
-Zero is the only value able to guarantee that when all the partitions heal
-the cluster will always be able to continue.
-
+```properties
 cluster-slave-validity-factor 10
+```
 
-Cluster slaves are able to migrate to orphaned masters, that are masters
-that are left without working slaves. This improves the cluster ability
-to resist to failures as otherwise an orphaned master can't be failed over
-in case of failure if it has no working slaves.
+slave-validity-factort太大会导致故障迁移完主节点会有很旧的数据，太小的话各个slave去竞争的时候又没有区分度了无法合理选择
+
+为了实现最大可用性，可以将slave-validity-factort设置为0，意味着不论什么时候，salve都会进行故障迁移
+
+
 
 Slaves migrate to orphaned masters only if there are still at least a
 given number of other working slaves for their old master. This number
