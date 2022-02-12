@@ -1,3 +1,5 @@
+[TOC]
+
 ## Redis单位
 
 不区分大小写
@@ -18,7 +20,7 @@
 
 ## include 导入
 
-- ### **include**
+### **include**
 
 当使用标准模板，并且需要对服务器进行一些自定义设置时可以用到
 
@@ -34,7 +36,7 @@ include c:\path\to\other.conf
 
 ## network 网络
 
-- ### **bind**
+### **bind**
 
 如果没有绑定接口，那么redis会监听当前服务所有可达的网络接口
 
@@ -54,7 +56,7 @@ bind 127.0.0.1  #绑定本机下所有端口
 
 如果去bind配置，将导致网络上的所有接口可见，危险!
 
-- #### protected-mode
+### protected-mode
 
 安全模式，为了防止redis实例被公开访问，默认开启
 
@@ -70,7 +72,7 @@ redis-server仅接受来自127.0.0.1和::1的连接 或者是Unix域名套接字
 redis.clients.jedis.exceptions.JedisConnectionException: Failed connecting to host xxx.xxx.xxx.xxx:6379 
 ```
 
-- ### **port**
+### **port**
 
 监听端口来接受链接，默认是6379， 如果端口是0, Redis不会监听TCP socket
 
@@ -78,7 +80,7 @@ redis.clients.jedis.exceptions.JedisConnectionException: Failed connecting to ho
 port 6379
 ```
 
-- ### **tcp-backlog**
+### **tcp-backlog**
 
 此参数确定了TCP连接中已完成队列(完成三次握手之后)的长度， 当然此值必须不大于Linux系统定义的/proc/sys/net/core/somaxconn值，默认是511，而Linux的默认参数值是128。当系统并发量大并且客户端速度缓慢的时候，可以将这二个参数一起参考设定。
 
@@ -86,7 +88,7 @@ port 6379
 tcp-backlog 511
 ```
 
-- ###  **Unix socket.**
+###  **Unix socket.**
 
 指定用来监听Unix套套接字的路径。没有默认值，所以在没有指定的情况下Redis不会监听Unix套接字
 
@@ -95,7 +97,7 @@ tcp-backlog 511
  unixsocketperm 700
 ```
 
-- ### **timeout**
+### **timeout**
 
 客户端超过N秒空闲后关闭链接(0表示不关闭)
 
@@ -103,7 +105,7 @@ tcp-backlog 511
 timeout 0
 ```
 
-- ### **tcp-keepalive**
+### **tcp-keepalive**
 
 如果不为零，指定时间间隔来使用空闲链接向客户端发送ACK
 
@@ -118,7 +120,7 @@ tcp-keepalive 60
 
 ##  GENERAL 通用配置
 
-- ### **daemonize**
+### **daemonize**
 
   设置守护线程，默认关闭，如果开启会写入一个`/var/run/redis.pid` 文件。
 
@@ -133,7 +135,7 @@ tcp-keepalive 60
 
 
 
-- ### **pidfile**
+### **pidfile**
 
   指定守护线程文件写入路径，不存在则会创建
 
@@ -143,7 +145,7 @@ tcp-keepalive 60
 
 
 
-- ### supervised
+### supervised
 
   可以通过upstart和systemd管理Redis守护进程，这个参数是和具体的操作系统相关的。
 
@@ -158,7 +160,7 @@ tcp-keepalive 60
 
 
 
-- ### **loglevel**
+### **loglevel**
 
   告警级别
 
@@ -171,7 +173,7 @@ tcp-keepalive 60
 
 
 
-- ### **logfile**
+### **logfile**
 
   日志文件目录
 
@@ -182,7 +184,7 @@ tcp-keepalive 60
 
 
 
-- ### **syslog**
+### **syslog**
 
   记录WINDOWS系统下的日志
 
@@ -191,7 +193,7 @@ tcp-keepalive 60
   syslog-ident redis   #指定在windows下的日志事件名，默认redis
   ```
 
-- ### **databases**
+### **databases**
 
   设置数据库数量，默认是16个，默认数据库是DB 0
 
@@ -207,7 +209,7 @@ RDB模式
 
 [RDB如何应对快照过程中数据变更：写时复制](https://www.cnblogs.com/Courage129/p/14343136.html)	
 
-- ### **save**
+### **save**
 
   `save <seconds> <changes>`
 
@@ -222,7 +224,7 @@ RDB模式
   save 60 10000
   ```
 
-- ### **stop-writes-on-bgsave-error**
+### **stop-writes-on-bgsave-error**
 
   redis的RDB机制是调用forks启动子线程，将数据集写入到临时的RDB文件中，在替换原来的文件，并删除旧的RDB文件
 
@@ -233,29 +235,29 @@ RDB模式
   ```properties
   stop-writes-on-bgsave-error  yes     #默认开启
   ```
-  
-- ### **rdbcompression**
+
+### **rdbcompression**
   在生成.rdb文件时，是否使用LZF压缩字符串，如果压缩则会提高CPU负载
   不使用的话则生成的rdb文件会比较大
     ```properties
   rdbcompression  yes     #默认开启
     ```
 
-- ### **rdbchecksum**
+### **rdbchecksum**
   从RDB 5开始，会在结尾使用CRC64计算校验和，大概耗费10%的性能
-  
+
   关闭的话会结尾校验和置为0
     ```properties
   rdbchecksum  yes     #默认开启
     ```
 
-- ### **dbfilename**
+### **dbfilename**
   rdb保存文件名
     ```properties
   dbfilename dump.rdb     #默认名称
     ```
 
-- ### **dir**
+### **dir**
   rdb保存工作路径
     ```properties
   dir ./     #默认路径
@@ -269,106 +271,106 @@ RDB模式
 slaveof <masterip> <masterport>  #绑定master的IP跟端口
 ```
 
-- ### **masterauth**
+### **masterauth**
   如果master使用requirepass进行了密码保护，则需要配置密码，否则master会拒接slave请求
     ```properties
   masterauth <master-password>     #默认路径
     ```
 
 
-- ### **slave-serve-stale-data**
+### **slave-serve-stale-data**
   当slave断开与master的链接的时候，或者slave同步仍未完成
 
-    ```properties
-  #开启的时候会根据过时数据回复客户端请求，如果当时是第一次同步，则数据集可能为空
-  slave-serve-stale-data yes
+```properties
+#开启的时候会根据过时数据回复客户端请求，如果当时是第一次同步，则数据集可能为空
+slave-serve-stale-data yes
+  
+#关闭的时候，会统一按照SYNC with master in progress回复请求
+slave-serve-stale-data no
+```
 
-  #关闭的时候，会统一按照SYNC with master in progress回复请求
-  slave-serve-stale-data no
-    ```
 
-
-- ### **slave-read-only**
+### **slave-read-only**
   配置slave 是否为只读，没见过配置slave为可写入的
     ```properties
   slave-read-only yes    #默认只读
     ```
-  
-- ### **repl-diskless-sync**
+
+### **repl-diskless-sync**
   配置主从同步时是否使用无盘复制
 
   当新建master-slave的关系或者重连时无法进行增量同步时(backlog找不到对应地offset)，需要进行一个”full-synchronization“全量同步，
   这个时候需要将dump.rdb文件从 master同步到slave,全量同步有两种方式：
-  
+
   1)磁盘复制  master在接受到slave请求后会fork一个子进程，基于当前内存中已有的数据，创建一份最新的RDB文件写入磁盘，
   稍后(repl-diskless-sync-delay 规定时延收集其他需要同步的slave请求)主线程将rdb文件发送给所有的slaves
-  
+
   2)无盘复制 主线程直接在内存中生成一个rdb文件然后传输给slave，如果有新的slave需要rdb文件，会在当前线程完成后再重新进行；master可以配置开始快照传输前的等待延迟，来时多个slave并行
-  
+
   无盘复制主要用在磁盘速度慢而网络传输速度快的情况
-  
+
     ```properties
   repl-diskless-sync no    #默认磁盘复制
     ```
-  
-- ### **repl-diskless-sync-delay**
+
+### **repl-diskless-sync-delay**
   无盘复制情况下，配置时延，等待是否有其他slave一起参与传输
-  
+
   单位为秒
     ```properties
   repl-diskless-sync-delay 5    #默认时延为5s
   repl-diskless-sync-delay 0    #时延为0表示立即开始
     ```
 
-- ### **repl-ping-slave-period**
+### **repl-ping-slave-period**
   从节点定时向主节点发送ping(心跳检测)，单位为秒
     ```properties
   repl-ping-slave-period 10    #默认10秒
     ```
 
-- ### **repl-timeout**
+### **repl-timeout**
   三种情况认为复制超时：
   1）slave角度，如果在repl-timeout时间内没有收到master SYNC传输的rdb snapshot数据，
-  
+
   2）slave角度，在repl-timeout没有收到master发送的数据包或者ping。
-  
+
   3）master角度，在repl-timeout时间没有收到REPCONF ACK确认信息。
-  
+
   当redis检测到repl-timeout超时(默认值60s)，将会关闭主从之间的连接,redis slave发起重新建立主从连接的请求。
-  
+
   对于内存数据集比较大的系统，可以增大repl-timeout参数。
     ```properties
   repl-timeout 60    #默认60秒
     ```
 
-- ### **repl-disable-tcp-nodelay**
+### **repl-disable-tcp-nodelay**
   [Nagle算法，TCP_NODELAY](https://en.wikipedia.org/wiki/Nagle's_algorithm)
 
   简单的来说如果开启，redis会用更少的数据包来向slave发送数据，同时用到的带宽也更小，但是会增加大约40ms的延迟
-  
+
   Nagle算法的提出本质是为了在网络条件不好的情况下通过网络发送的数据包数量来提高TCP/IP网络效率的方法，如果是在网络条件不好，或者主备节点很多，主备网络间链路很长的情况下，开启这个算法也是行之有效的；
     ```properties
   repl-disable-tcp-nodelay no    #默认关闭
     ```
 
-- ### **repl-ping-slave-period**
+### **repl-ping-slave-period**
   设置复制积压大小。 积压是一个积累的缓冲区从机断开一段时间后的从机数据，
   这样当一个从机想再次重新连接，通常不需要完全重新同步，而是部分重新同步
   就足够了，只需传递从服务器断开连接后丢失的数据部分。 
-  
+
   缓存积压区越大，就可以容忍slave断线更长时间，这样slave一恢复链接就可以开始部分同步操作
   ```properties
   repl-backlog-size 1mb    #默认1mb
   ```
 
-- ### **repl-ping-slave-period**
+### **repl-ping-slave-period**
   backlog是在master有slave链接的时候才会生成，同样的，如果所有的slave都断开链接并且长时间没有重新链接，
   那么backlog就会清空，这个参数就标识的最后一个salve断开链接后backlog仍然存活的时间Time to Live
   ```properties
   repl-backlog-ttl 3600    #默认3600S
   ```
 
-- ### **slave-priority**
+### **slave-priority**
   slave-priority是个整数，当哨兵选举master的时候，越小的priority越会被选举;
   但是0表示不会被选举
   ```properties
@@ -376,15 +378,15 @@ slaveof <masterip> <masterport>  #绑定master的IP跟端口
   slave-priority 0      #0表示不会选举为master
   ```
 
-- ### **min-slaves-xxx**
+### **min-slaves-xxx**
   当slave连接到master,且延迟<=M的数量少于N的时候，master可以拒绝写入
-  
+
   延迟指的是从slave发送到master的ping时间(其实就是心跳机制) 如果配置了min-slaves-to-write，健康的slave的个数小于配置项N，mater就禁止写入。
 
   这个配置虽然不能保证N个slave都一定能接收到master的写操作，但是能避免没有足够健康的slave的时候，master不能写入来避免数据丢失 。
-  
+
   设置为0关闭该功能。
-  
+
   ```properties
   min-slaves-to-write 3  #最少有3个slave的延迟小于10才写入
   min-slaves-max-lag 10
@@ -555,10 +557,14 @@ Redis 提供了一个script kill 的命令来中止脚本的执行
 
 ##REDIS CLUSTER 集群
 
+###  cluster-enabled
+
 一般的Redis实例不能作为集群的节点，只有配置了`cluster-enabled`才能作为集群的节点
   ```properties
   cluster-enabled yes
   ```
+
+### cluster-config-file
 
 集群的每个节点都有一个配置文件，是不允许手动编辑的；配置文件是由Redis节点创建和更新的，要确保同一集群中
 的每个节点实例配置文件名都不重复
@@ -567,7 +573,10 @@ Redis 提供了一个script kill 的命令来中止脚本的执行
 cluster-config-file nodes-6379.conf
   ```
 
+### cluster-node-timeout
+
 集群节点的超时时间是以毫秒为单位的，许多内部的时间限制是超时时间的倍数
+
  ```properties
 cluster-node-timeout 15000
  ```
@@ -579,6 +588,8 @@ cluster-node-timeout 15000
 1)如果有多个从节点可以实现故障转移，从节点们会互相通信，根据offset提供最新的从节点
 
 2)每个从节点都计算上次与Master进行通信的时间(ping,Master命令下发，断开链接等)，如果上次通信时间太久的话就不考虑在当前从节点进行故障转移;
+
+### cluster-slave-validity-factor
 
 第二点的超时时间用户可以自己设置，这个超时时间为：
 
@@ -592,63 +603,51 @@ slave-validity-factort太大会导致故障迁移完主节点会有很旧的数�
 
 为了实现最大可用性，可以将slave-validity-factort设置为0，意味着不论什么时候，salve都会进行故障迁移
 
+### cluster-migration-barrier
 
+迁移阈值，意味着当旧的master节点必须有大于等于该阈值的可工作从节点，slave才会发生故障迁移，默认值是1
 
-Slaves migrate to orphaned masters only if there are still at least a
-given number of other working slaves for their old master. This number
-is the "migration barrier". A migration barrier of 1 means that a slave
-will migrate only if there is at least 1 other working slave for its master
-and so forth. It usually reflects the number of slaves you want for every
-master in your cluster.
+```properties
+cluster-migration-barrier 1  #默认参数是1
+```
 
-Default is 1 (slaves migrate only if their masters remain with at least
-one slave). To disable migration just set it to a very large value.
-A value of 0 can be set but is useful only for debugging and dangerous
-in production.
+### cluster-require-full-coverage
 
-cluster-migration-barrier 1
+Redis集群默认当有Hash槽没有被覆盖(没有可用的节点去提供服务)的时候，会停止接受请求
 
-By default Redis Cluster nodes stop accepting queries if they detect there
-is at least an hash slot uncovered (no available node is serving it).
-This way if the cluster is partially down (for example a range of hash slots
-are no longer covered) all the cluster becomes, eventually, unavailable.
-It automatically returns available as soon as all the slots are covered again.
+通过这种方式，如果集群部分宕机的话（比如一部分hash槽不再被覆盖）集群会立即停止服务，当这些槽被重新覆盖的时候，又会重新提供服务；
 
-However sometimes you want the subset of the cluster which is working,
-to continue to accept queries for the part of the key space that is still
-covered. In order to do so, just set the cluster-require-full-coverage
-option to no.
+如果希望在部分槽没被覆盖的时候依然对已覆盖的槽提供服务，只需要把这个参数设置为`no`
 
+不建议打开该配置，这样会造成分区的时候，小分区的master一直在接受写请求，而造成很长时间数据不一致。
+
+```properties
 cluster-require-full-coverage yes
+```
 
-In order to setup your cluster make sure to read the documentation
-available at http://redis.io web site.
+## SLOW LOG
 
-SLOW LOG
+Redis 慢日志是一个记录超过指定查询的系统执行时间处理时间。 执行时间不包括 I/O 操作比如与客户交谈，发送回复等等，只是实际执行命令所需的时间；
 
-The Redis Slow Log is a system to log queries that exceeded a specified
-execution time. The execution time does not include the I/O operations
-like talking with the client, sending the reply and so forth,
-but just the time needed to actually execute the command (this is the only
-stage of command execution where the thread is blocked and can not serve
-other requests in the meantime).
+Slow Log 存在一个队列里，两个参数一个控制超时记录时间，一个控制队列的长度
 
-You can configure the slow log with two parameters: one tells Redis
-what is the execution time, in microseconds, to exceed in order for the
-command to get logged, and the other parameter is the length of the
-slow log. When a new command is logged the oldest one is removed from the
-queue of logged commands.
+### slowlog-log-slower-than
 
-The following time is expressed in microseconds, so 1000000 is equivalent
-to one second. Note that a negative number disables the slow log, while
-a value of zero forces the logging of every command.
+```properties
 slowlog-log-slower-than 10000
+```
 
-There is no limit to this length. Just be aware that it will consume memory.
-You can reclaim memory used by the slow log with SLOWLOG RESET.
+执行时间比slowlog-log-slower-than大的请求记录到slowlog里面，单位是微秒，所以1000000就是1秒。注意，负数时间会禁用慢查询日志，而0则会强制记录所有命令。
+
+### slowlog-max-len
+
+```properties
 slowlog-max-len 128
+```
 
-LATENCY MONITOR
+慢日志最大长度，可以随便填写数值，没有上限，但要注意它会消耗内存。你可以使用SLOWLOG RESET来重设这个值。
+
+## LATENCY MONITOR
 
 The Redis latency monitoring subsystem samples different operations
 at runtime in order to collect data related to possible sources of
@@ -669,7 +668,7 @@ monitoring can easily be enabled at runtime using the command
 "CONFIG SET latency-monitor-threshold <milliseconds>" if needed.
 latency-monitor-threshold 0
 
-EVENT NOTIFICATION
+## EVENT NOTIFICATION
 
 Redis can notify Pub/Sub clients about events happening in the key space.
 This feature is documented at http://redis.io/topics/notifications
@@ -715,7 +714,7 @@ this feature and the feature has some overhead. Note that if you don't
 specify at least one of K or E, no events will be delivered.
 notify-keyspace-events ""
 
-ADVANCED CONFIG
+## ADVANCED CONFIG
 
 Hashes are encoded using a memory efficient data structure when they have a
 small number of entries, and the biggest entry does not exceed a given
