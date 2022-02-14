@@ -649,78 +649,59 @@ slowlog-max-len 128
 
 ## LATENCY MONITOR
 
-The Redis latency monitoring subsystem samples different operations
-at runtime in order to collect data related to possible sources of
-latency of a Redis instance.
+Redis延迟监视子系统在运行时对不同的操作进行采样，以便收集与Redis实例的可能延迟源相关的数据;
+通过延迟命令，用户可以使用此信息打印图表和获取报告;
+系统只记录在等于或大于通过延迟监视器阈值配置指令指定的毫秒数的时间内执行的操作。当其值设置为零时，延迟监视器将关闭;
+默认情况下，延迟监视是禁用的，因为如果没有延迟问题，则通常不需要它，而且收集数据会对性能产生影响，虽然影响很小，但可以在大负载下测量。如果需要，可以在运行时使用命令**“CONFIG SET Latency monitor threshold<millishes>”**轻松启用延迟监视;
 
-Via the LATENCY command this information is available to the user that can
-print graphs and obtain reports.
+```properties
+latency-monitor-threshold 0  #0代表关闭，单位是毫秒
+```
 
-The system only logs operations that were performed in a time equal or
-greater than the amount of milliseconds specified via the
-latency-monitor-threshold configuration directive. When its value is set
-to zero, the latency monitor is turned off.
 
-By default latency monitoring is disabled since it is mostly not needed
-if you don't have latency issues, and collecting data has a performance
-impact, that while very small, can be measured under big load. Latency
-monitoring can easily be enabled at runtime using the command
-"CONFIG SET latency-monitor-threshold <milliseconds>" if needed.
-latency-monitor-threshold 0
 
 ## EVENT NOTIFICATION
 
-Redis can notify Pub/Sub clients about events happening in the key space.
-This feature is documented at http://redis.io/topics/notifications
+Redis的事件监听器允许客户端订阅 Pub/Sub 频道，以便接收以某种方式影响 Redis 数据集的事件。与集群中的事件不同，该事件通知不会广播，需要单独订阅
 
-For instance if keyspace events notification is enabled, and a client
-performs a DEL operation on key "foo" stored in the Database 0, two
-messages will be published via Pub/Sub:
+Keyspace 通知是通过为影响 Redis 数据空间的每个操作发送两种不同类型的事件来实现的。例如，针对数据库 中命名的键的DEL操作将触发两条消息的传递，完全等同于以下两个 PUBLISH命令：在dataset0中删除 mykey
 
-PUBLISH __keyspace@0__:foo del
-PUBLISH __keyevent@0__:del foo
+```properties
+PUBLISH __keyspace@0__:mykey del   #Key-space 通知
+PUBLISH __keyevent@0__:del mykey   #Key-event 通知
+```
 
-It is possible to select the events that Redis will notify among a set
-of classes. Every class is identified by a single character:
-
-K     Keyspace events, published with __keyspace@<db>__ prefix.
-E     Keyevent events, published with __keyevent@<db>__ prefix.
-g     Generic commands (non-type specific) like DEL, EXPIRE, RENAME, ...
-$     String commands
-l     List commands
-s     Set commands
-h     Hash commands
-z     Sorted set commands
-x     Expired events (events generated every time a key expires)
-e     Evicted events (events generated when a key is evicted for maxmemory)
-A     Alias for g$lshzxe, so that the "AKE" string means all the events.
-
-The "notify-keyspace-events" takes as argument a string that is composed
-of zero or multiple characters. The empty string means that notifications
-are disabled.
-
-Example: to enable list and generic events, from the point of view of the
-event name, use:
-
-notify-keyspace-events Elg
-
-Example 2: to get the stream of the expired keys subscribing to channel
-name __keyevent@0__:expired use:
-
-notify-keyspace-events Ex
-
-By default all notifications are disabled because most users don't need
-this feature and the feature has some overhead. Note that if you don't
-specify at least one of K or E, no events will be delivered.
-notify-keyspace-events ""
+配置：[参数参考](https://redis.io/topics/notifications )
+```properties
+notify-keyspace-events ""  #默认空串，功能关闭
+```
+| 字符 | 发送的通知                                                 |
+| ---- | ---------------------------------------------------------- |
+| K    | 键空间通知，所有通知以 __keyspace@<db>__ 为前缀，针对Key   |
+| E    | 键事件通知，所有通知以 __keyevent@<db>__ 为前缀，针对event |
+| g    | DEL 、 EXPIRE 、 RENAME 等类型无关的通用命令的通知         |
+| $    | 字符串命令的通知                                           |
+| l    | 列表命令的通知                                             |
+| s    | 集合命令的通知                                             |
+| h    | 哈希命令的通知                                             |
+| z    | 有序集合命令的通知                                         |
+| x    | 过期事件：每当有过期键被删除时发送                         |
+| e    | 驱逐(evict)事件：每当有键因为 maxmemory 政策而被删除时发送 |
+| A    | 参数 g$lshzxe 的别名，相当于是All                          |
 
 ## ADVANCED CONFIG
+
+#### Hash
+
+Hash是用高内存利用率的编码方式
 
 Hashes are encoded using a memory efficient data structure when they have a
 small number of entries, and the biggest entry does not exceed a given
 threshold. These thresholds can be configured using the following directives.
 hash-max-ziplist-entries 512
 hash-max-ziplist-value 64
+
+#### List
 
 Lists are also encoded in a special way to save a lot of space.
 The number of entries allowed per internal list node can be specified
