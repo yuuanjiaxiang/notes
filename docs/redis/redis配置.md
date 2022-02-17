@@ -693,150 +693,98 @@ notify-keyspace-events ""  #默认空串，功能关闭
 
 #### Hash
 
-Hash是用高内存利用率的编码方式
+指定在超过一定的数量或者最大的元素超过某一临界值时，采用一种特殊的哈希算法
 
-Hashes are encoded using a memory efficient data structure when they have a
-small number of entries, and the biggest entry does not exceed a given
-threshold. These thresholds can be configured using the following directives.
-hash-max-ziplist-entries 512
-hash-max-ziplist-value 64
+```properties
+hash-max-ziplist-value 64   #字符串长度都小于64字节
+hash-max-ziplist-entries 512  #元素数量小于512
+```
 
 #### List
 
-Lists are also encoded in a special way to save a lot of space.
-The number of entries allowed per internal list node can be specified
-as a fixed maximum size or a maximum number of elements.
-For a fixed maximum size, use -5 through -1, meaning:
+list也用特殊编码去节省内存空间，下面的参数代表不同的阈值
+
+```properties
+list-max-ziplist-size -2
 -5: max size: 64 Kb  <-- not recommended for normal workloads
 -4: max size: 32 Kb  <-- not recommended
 -3: max size: 16 Kb  <-- probably not recommended
 -2: max size: 8 Kb   <-- good
 -1: max size: 4 Kb   <-- good
-Positive numbers mean store up to _exactly_ that number of elements
-per list node.
-The highest performing option is usually -2 (8 Kb size) or -1 (4 Kb size),
-but if your use case is unique, adjust the settings as necessary.
-list-max-ziplist-size -2
+```
 
-Lists may also be compressed.
-Compress depth is the number of quicklist ziplist nodes from *each* side of
-the list to *exclude* from compression.  The head and tail of the list
-are always uncompressed for fast push/pop operations.  Settings are:
-0: disable all list compression
-1: depth 1 means "don't start compressing until after 1 node into the list,
-going from either the head or tail"
-So: [head]->node->node->...->node->[tail]
-[head], [tail] will always be uncompressed; inner nodes will compress.
-2: [head]->[next]->node->node->...->node->[prev]->[tail]
-2 here means: don't compress head or head->next or tail->prev or tail,
-but compress all nodes between them.
-3: [head]->[next]->[next]->node->node->...->node->[prev]->[prev]->[tail]
-etc.
+压缩深度是从列表的每一侧排除压缩的 quicklist ziplist 节点的数量。 列表的头部和尾部始终未压缩以进行快速推送/弹出操作
+
+```properties
+0:意味着禁止所有列表压缩
+1:表示必须有一个元素，不管是从head还是从tail进入列表，才开始启动压缩
+2: [head]->[next]->node->node->...->node->[prev]->[tail]禁止压缩head，next，prev,tail,但是可以压缩中间的所有元素
+3: [head]->[next]->[next]->node->node->...->node->[prev]->[prev]->[tail]同2，首位各3个元素
 list-compress-depth 0
+```
 
-Sets have a special encoding in just one case: when a set is composed
-of just strings that happen to be integers in radix 10 in the range
-of 64 bit signed integers.
-The following configuration setting sets the limit in the size of the
-set in order to use this special memory saving encoding.
-set-max-intset-entries 512
+#### Set
 
-Similarly to hashes and lists, sorted sets are also specially encoded in
-order to save a lot of space. This encoding is only used when the length and
-elements of a sorted set are below the following limits:
+ set只用所有元素都由十进制无符号整数组成时才能被压缩。
+
+```properties
+set-max-intset-entries 512   #set里最大元素，到达阈值启用压缩算法
+```
+
+#### zset
+
+zset也是只有长度和元素满足以下约束时才会启用压缩
+
+```properties
 zset-max-ziplist-entries 128
 zset-max-ziplist-value 64
+```
 
-HyperLogLog sparse representation bytes limit. The limit includes the
-16 bytes header. When an HyperLogLog using the sparse representation crosses
-this limit, it is converted into the dense representation.
+#### HyperLogLog
 
-A value greater than 16000 is totally useless, since at that point the
-dense representation is more memory efficient.
+value大小小于等于hll-sparse-max-bytes使用稀疏数据结构（sparse），大于hll-sparse-max-bytes使用稠密的数据结构（dense）。一个比16000大的value是几乎没用的，建议的value大概为3000。如果对CPU要求不高，对空间要求较高的，建议设置到10000左右。
 
-The suggested value is ~ 3000 in order to have the benefits of
-the space efficient encoding without slowing down too much PFADD,
-which is O(N) with the sparse encoding. The value can be raised to
-~ 10000 when CPU is not a concern, but space is, and the data set is
-composed of many HyperLogLogs with cardinality in the 0 - 15000 range.
-hll-sparse-max-bytes 3000
+```properties
+hll-sparse-max-bytes 3000   #阈值为0-15000
+```
 
-Active rehashing uses 1 millisecond every 100 milliseconds of CPU time in
-order to help rehashing the main Redis hash table (the one mapping top-level
-keys to values). The hash table implementation Redis uses (see dict.c)
-performs a lazy rehashing: the more operation you run into a hash table
-that is rehashing, the more rehashing "steps" are performed, so if the
-server is idle the rehashing is never complete and some more memory is used
-by the hash table.
+#### activerehashing
 
-The default is to use this millisecond 10 times every second in order to
-actively rehash the main dictionaries, freeing memory when possible.
+Redis将在每100毫秒时使用1毫秒的CPU时间来对redis的hash表进行重新hash，可以降低内存的使用。当你的使用场景中，有非常严格的实时性需要，不能够接受Redis时不时的对请求有2毫秒的延迟的话，把这项配置为no。如果没有这么严格的实时性要求，可以设置为yes，以便能够尽可能快的释放内存。
 
-If unsure:
-use "activerehashing no" if you have hard latency requirements and it is
-not a good thing in your environment that Redis can reply from time to time
-to queries with 2 milliseconds delay.
-
-use "activerehashing yes" if you don't have such hard requirements but
-want to free memory asap when possible.
+```properties
 activerehashing yes
+```
 
-The client output buffer limits can be used to force disconnection of clients
-that are not reading data from the server fast enough for some reason (a
-common reason is that a Pub/Sub client can't consume messages as fast as the
-publisher can produce them).
+在客户端与server进行的交互中，每个连接都会与一个buffer关联，此buffer用来队列化亟待被client接受的响应信息。如果client不能及时的消费响应信息，那么buffer将会被不断积压而给server带来内存压力。如果buffer中积压的数据达到阀值，将会导致连接被关闭，buffer被移除。buffer控制类型包括：
 
-The limit can be set differently for the three different classes of clients:
+*normal* -> 普通连接。
 
-normal -> normal clients including MONITOR clients
-slave  -> slave clients
-pubsub -> clients subscribed to at least one pubsub channel or pattern
+*slave* -> 与slave之间的连接。
 
-The syntax of every client-output-buffer-limit directive is the following:
+*pubsub* -> pub/sub类型连接，此类型的连接，往往会产生此种问题；因为pub端会密集的发布消息，但是sub端可能消费不足。
 
-client-output-buffer-limit <class> <hard limit> <soft limit> <soft seconds>
+指令格式：client-output-buffer-limit <class> <hard> <soft> <seconds>”，其中hard表示buffer最大值，一旦达到阀值将立即关闭连接；soft表示”容忍值”，它和seconds配合，如果buffer值超过soft且持续时间达到了seconds，也将立即关闭连接，如果超过了soft但是在seconds之后buffer数据小于了soft，连接将会被保留。其中hard和soft都设置为0，则表示禁用buffer控制，通常hard值大于soft。
 
-A client is immediately disconnected once the hard limit is reached, or if
-the soft limit is reached and remains reached for the specified number of
-seconds (continuously).
-So for instance if the hard limit is 32 megabytes and the soft limit is
-16 megabytes / 10 seconds, the client will get disconnected immediately
-if the size of the output buffers reach 32 megabytes, but will also get
-disconnected if the client reaches 16 megabytes and continuously overcomes
-the limit for 10 seconds.
-
-By default normal clients are not limited because they don't receive data
-without asking (in a push way), but just after a request, so only
-asynchronous clients may create a scenario where data is requested faster
-than it can read.
-
-Instead there is a default limit for pubsub and slave clients, since
-subscribers and slaves receive data in a push fashion.
-
-Both the hard or the soft limit can be disabled by setting them to zero.
+```properties
 client-output-buffer-limit normal 0 0 0
 client-output-buffer-limit slave 256mb 64mb 60
 client-output-buffer-limit pubsub 32mb 8mb 60
+```
 
-Redis calls an internal function to perform many background tasks, like
-closing connections of clients in timeot, purging expired keys that are
-never requested, and so forth.
+#### hz
 
-Not all tasks are perforemd with the same frequency, but Redis checks for
-tasks to perform according to the specified "hz" value.
+Redis server执行后台任务的频率，默认为10，此值越大表示redis对”间歇性task”的执行次数越频繁(次数/秒)。”间歇性task”包括”过期集合”检测、关闭”空闲超时”的连接等，此值必须大于0且小于500。(参见redis.h源码)。此值过小就意味着更多的cpu周期消耗，后台task被轮询的次数更频繁。此值过大意味着”内存敏感”性较差。建议保持默认值。
 
-By default "hz" is set to 10. Raising the value will use more CPU when
-Redis is idle, but at the same time will make Redis more responsive when
-there are many keys expiring at the same time, and timeouts may be
-handled with more precision.
-
-The range is between 1 and 500, however a value over 100 is usually not
-a good idea. Most users should use the default of 10 and raise this up to
-100 only in environments where very low latency is required.
+```properties
 hz 10
+```
 
-When a child rewrites the AOF file, if the following option is enabled
-the file will be fsync-ed every 32 MB of data generated. This is useful
-in order to commit the file to the disk more incrementally and avoid
-big latency spikes.
+#### aof-rewrite-incremental-fsync.
+
+子进程根据内存快照，按照命令合并规则写入到新的AOF文件中。每次批量写入磁盘的数据量由aof-rewrite-incremental-fsync参数控制，默认为32M，避免单次刷盘数据过多造成硬盘阻塞
+
+```properties
 aof-rewrite-incremental-fsync yes
+```
+
